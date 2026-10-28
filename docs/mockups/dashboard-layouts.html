@@ -1,0 +1,90 @@
+<h2>Which dashboard feels right?</h2>
+<p class="subtitle">Three directions for the plugin's home screen. Drafting, outlining, and ideas all count as showing up. No streaks, no traffic, no scores.</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Today first</h3>
+      <p>Opens on a quiet prompt. You log what you did in a tap, then see a soft week.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">Dashboard / Today</div>
+        <div class="mockup-body">
+          <div style="font-size:18px;font-weight:600;margin-bottom:4px">Good morning, Derek.</div>
+          <div style="color:#777;margin-bottom:14px">What did you do for your writing today?</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+            <button class="mock-button">Drafted</button>
+            <button class="mock-button">Outlined</button>
+            <button class="mock-button">Jotted an idea</button>
+            <button class="mock-button">Edited</button>
+            <button class="mock-button">Published</button>
+          </div>
+          <div class="label">This week</div>
+          <div style="display:flex;gap:8px;margin:8px 0 18px">
+            <span style="width:28px;height:28px;border-radius:50%;background:#bfb3f5"></span>
+            <span style="width:28px;height:28px;border-radius:50%;background:#e6e6e6"></span>
+            <span style="width:28px;height:28px;border-radius:50%;background:#8b73ee"></span>
+            <span style="width:28px;height:28px;border-radius:50%;background:#e6e6e6"></span>
+            <span style="width:28px;height:28px;border-radius:50%;border:2px dashed #8b73ee"></span>
+            <span style="width:28px;height:28px;border-radius:50%;background:#f3f3f3"></span>
+            <span style="width:28px;height:28px;border-radius:50%;background:#f3f3f3"></span>
+          </div>
+          <div class="label">Your goals</div>
+          <div style="margin-top:6px">Draft twice this week &nbsp;<span style="color:#777">1 of 2</span></div>
+          <div>Outline the garden post &nbsp;<span style="color:#777">open</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Writing journal</h3>
+      <p>A month calendar with a short note per day. Looking back is the main event.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">Dashboard / Journal</div>
+        <div class="mockup-body">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+            <strong>October</strong><span style="color:#777">11 days with writing</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px">
+            <span style="height:30px;background:#bfb3f5;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span><span style="height:30px;background:#8b73ee;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span><span style="height:30px;background:#bfb3f5;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span>
+            <span style="height:30px;background:#8b73ee;border-radius:6px"></span><span style="height:30px;background:#bfb3f5;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span><span style="height:30px;background:#bfb3f5;border-radius:6px"></span><span style="height:30px;background:#8b73ee;border-radius:6px"></span><span style="height:30px;background:#f3f3f3;border-radius:6px"></span>
+          </div>
+          <div class="label">Thursday, Oct 23</div>
+          <div style="margin:6px 0 12px;padding:10px;border:1px solid #e3e3e3;border-radius:8px">Outlined the garden post. Stuck on the ending, that's fine.</div>
+          <div class="label">A question for this week</div>
+          <div style="color:#555;margin-top:4px">What was easier to write than you expected?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Goals and seasons</h3>
+      <p>Built around your own goals, with a gentle look back by month or season. Few daily touches.</p>
+      <div class="mockup" style="margin-top:12px">
+        <div class="mockup-header">Dashboard / Goals</div>
+        <div class="mockup-body">
+          <div class="label">What I'm working toward</div>
+          <div style="margin:8px 0;padding:10px;border:1px solid #e3e3e3;border-radius:8px">
+            <strong>Write 3 times a week</strong>
+            <div style="color:#777;font-size:13px">drafting, outlining, or ideas all count &middot; 2 of 3 this week</div>
+          </div>
+          <div style="margin:8px 0;padding:10px;border:1px solid #e3e3e3;border-radius:8px">
+            <strong>Finish one long piece by December</strong>
+            <div style="color:#777;font-size:13px">you chose this &middot; 4 sessions so far</div>
+          </div>
+          <div style="margin:8px 0 16px;padding:10px;border:1px dashed #bbb;border-radius:8px;color:#777">+ Add a goal in your own words</div>
+          <div class="label">Looking back, autumn</div>
+          <div style="color:#555;margin-top:4px">You wrote on 34 days. Most of it was drafting, mostly on weekends. Quiet stretch in early October, then you came back.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Blog Rhythm mockups</title>
+<style>
+:root{
+  --brand:#3858e9; --brand-mid:#8b9cf1; --brand-soft:#d6dcfa;
+  --fg:#1e1e1e; --fg-muted:#636363; --line:#c3c4c7; --line-soft:#e0e0e0;
+  --ctrl:#8c8f94; --empty:#ececec; --adminbg:#f0f0f1; --menu:#1d2327; --menu-hi:#2c3338;
+}
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;color:var(--fg);background:#fff}
+.switcher{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line-soft);padding:10px 16px;display:flex;gap:8px;align-items:center}
+.switcher b{margin-right:8px;font-size:13px}
+.switcher button{font:inherit;padding:5px 12px;border:1px solid var(--ctrl);background:#fff;border-radius:2px;cursor:pointer}
+.switcher button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.switcher span{margin-left:auto;color:var(--fg-muted)}
+.chrome{display:flex;min-height:760px;background:var(--adminbg)}
+.bar{height:32px;background:var(--menu);color:#c3c4c7;padding:0 12px;display:flex;align-items:center;gap:14px;font-size:13px}
+.bar i{font-style:normal;color:#fff}
+.menu{width:160px;background:var(--menu);color:#c3c4c7;flex:none;padding-top:8px}
+.menu div{padding:7px 12px}.menu .cur{background:var(--brand);color:#fff}.menu .sub{background:var(--menu-hi);padding:4px 0}
+.menu .sub div{padding:3px 12px 3px 24px;font-size:13px}.menu .sub .on{color:#fff;font-weight:600}
+.main{flex:1;padding:20px 20px 40px;min-width:0}
+h1.wp-h1{font-size:23px;font-weight:400;margin:0 0 16px}
+.view{display:none}.view.on{display:block}
+/* postbox (core dashboard widget) */
+.row{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.slot{width:420px}
+.slot small{display:block;color:var(--fg-muted);margin:0 0 6px}
+.postbox{background:#fff;border:1px solid var(--line);box-shadow:0 1px 1px rgba(0,0,0,.04)}
+.postbox>h2{margin:0;padding:8px 12px;font-size:14px;font-weight:600;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.postbox>h2 a{font-weight:400;font-size:13px;color:var(--brand);text-decoration:none}
+.inside{padding:12px 12px 14px}
+.intent{font-size:14px;margin:0 0 10px}
+.intent em{font-style:normal;color:var(--fg-muted)}
+.grid{display:flex;gap:3px}
+.col{display:flex;flex-direction:column;gap:3px}
+.dot{width:10px;height:10px;border-radius:3px;background:var(--empty)}
+.dot.p{background:var(--brand)}.dot.d{background:var(--brand-mid)}.dot.i{background:var(--brand-soft)}
+.dot.today{outline:2px solid var(--fg);outline-offset:1px}
+.dot.rest{background:repeating-linear-gradient(45deg,#f6f6f6,#f6f6f6 2px,#e6e6e6 2px,#e6e6e6 3px)}
+.months{position:relative;height:16px;font-size:11px;color:var(--fg-muted);margin-bottom:2px}
+.months span{position:absolute}
+.legend{display:flex;gap:12px;font-size:11px;color:var(--fg-muted);margin-top:8px;align-items:center}
+.legend .dot{display:inline-block;margin-right:4px;vertical-align:-1px}
+.sum{margin:12px 0 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sum p{margin:0}
+.sum .muted{color:var(--fg-muted)}
+.btn{font:inherit;min-height:32px;padding:0 12px;border:1px solid var(--brand);color:var(--brand);background:#fff;border-radius:2px;cursor:pointer}
+.btn.primary{background:var(--brand);color:#fff}
+.weeks{display:flex;gap:6px}
+.wk{display:flex;flex-direction:column-reverse;gap:3px;align-items:center}
+.wk .dot{width:14px;height:14px;border-radius:50%}
+.wk small{font-size:10px;color:var(--fg-muted);margin:3px 0 0}
+.empty{text-align:center;padding:18px 8px 6px}
+.empty .art{display:inline-flex;gap:4px;margin-bottom:10px}
+.empty h3{margin:0 0 4px;font-size:14px}.empty p{margin:0 0 12px;color:var(--fg-muted)}
+/* settings page */
+.page{background:#fff;border:1px solid var(--line-soft)}
+.page-head{padding:16px 24px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:flex-start}
+.page-head h1{margin:0;font-size:20px;font-weight:600}
+.page-head p{margin:2px 0 0;color:var(--fg-muted)}
+.badge{display:inline-block;background:#f0f0f0;border-radius:2px;padding:1px 8px;font-size:12px;color:var(--fg);margin-left:8px;font-weight:400;vertical-align:2px}
+.page-body{display:flex;gap:32px;padding:24px;align-items:flex-start}
+.form{flex:1;min-width:0;max-width:600px}
+.aside{width:420px;flex:none;position:sticky;top:60px}
+.aside .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--fg-muted);margin:0 0 6px;font-weight:600}
+.card{border:1px solid var(--line-soft);border-radius:2px;margin:0 0 16px}
+.card>header{padding:14px 16px 0}
+.card h2{margin:0;font-size:15px;font-weight:600}
+.card header p{margin:2px 0 0;color:var(--fg-muted)}
+.card .body{padding:12px 16px 16px}
+.field{margin:0 0 14px}.field:last-child{margin-bottom:0}
+.field label.t,.field .t{display:block;font-weight:500;margin-bottom:4px}
+.help{color:var(--fg-muted);font-size:12px;margin-top:4px}
+.radios{display:grid;gap:8px}
+.radio{display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.radio input{margin:3px 0 0}
+.radio b{font-weight:500;display:block}
+.radio span{color:var(--fg-muted);font-size:12px}
+input[type=text],input[type=number],input[type=date],select{font:inherit;min-height:32px;padding:0 10px;border:1px solid var(--ctrl);border-radius:2px;background:#fff;color:var(--fg)}
+input[type=text]{width:100%}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--brand);outline-offset:0;border-color:var(--brand)}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chk{display:flex;gap:8px;align-items:flex-start;margin:0 0 8px}
+.chk input{margin-top:3px}
+.sw{display:flex;gap:10px;align-items:flex-start}
+.sw button{flex:none;width:36px;height:20px;border-radius:10px;border:1px solid var(--ctrl);background:#fff;position:relative;cursor:pointer;padding:0;margin-top:1px}
+.sw button::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--ctrl);transition:.15s}
+.sw button[aria-checked=true]{background:var(--brand);border-color:var(--brand)}
+.sw button[aria-checked=true]::after{left:19px;background:#fff}
+.sw b{font-weight:500;display:block}.sw span{color:var(--fg-muted);font-size:12px}
+.foot{display:flex;gap:8px;align-items:center;padding:4px 0 0}
+.savednote{color:var(--fg-muted)}
+.danger{color:#cc1818;background:none;border:0;padding:0;cursor:pointer;font:inherit;text-decoration:underline}
+.callout{background:#f6f7fb;border-left:3px solid var(--brand);padding:8px 12px;margin:0 0 16px;font-size:12px;color:var(--fg)}
+.guess{display:inline-block;font-size:11px;background:#fff4d6;border-radius:2px;padding:0 6px;margin-left:6px;color:#6b4b00;vertical-align:1px}
+</style>
+</head>
+<body>
+<div class="switcher">
+  <b>Blog Rhythm mockups</b>
+  <button data-v="widget" class="on">Dashboard widget</button>
+  <button data-v="settings">Settings page</button>
+  <span>Built from @wordpress/ui and core tokens. Yellow tags mark my guesses.</span>
+</div>
+
+<div class="chrome-wrap">
+  <div class="bar"><i>W</i> My Blog &nbsp; + New</div>
+  <div class="chrome">
+    <div class="menu">
+      <div class="cur">Dashboard</div>
+      <div>Posts</div><div>Media</div><div>Pages</div><div>Comments</div>
+      <div>Appearance</div><div>Plugins</div><div>Users</div><div>Tools</div>
+      <div id="menuset">Settings</div>
+      <div class="sub" id="submenu" style="display:none"><div>General</div><div>Writing</div><div>Reading</div><div class="on">Blog Rhythm</div></div>
+    </div>
+    <div class="main">
+
+      <!-- VIEW 1: DASHBOARD -->
+      <div class="view on" id="v-widget">
+        <h1 class="wp-h1">Dashboard</h1>
+        <p style="color:var(--fg-muted);margin:-8px 0 16px">Shown at real size: 420px is a typical column on a laptop. Four states of the same widget.</p>
+        <div class="row" id="widgets"></div>
+      </div>
+
+      <!-- VIEW 2: SETTINGS -->
+      <div class="view" id="v-settings">
+        <div class="page">
+          <div class="page-head">
+            <div>
+              <h1>Blog Rhythm <span class="badge">Only you can see this</span></h1>
+              <p>Set the pace that suits you. Drafting and outlining count as showing up.</p>
+            </div>
+            <button class="btn primary" id="save">Save changes</button>
+          </div>
+          <div class="page-body">
+            <div class="form">
+
+              <section class="card">
+                <header><h2>Your pace</h2><p>How often would you like to show up? Change it any time; nothing is lost.</p></header>
+                <div class="body">
+                  <div class="field radios" role="radiogroup" aria-label="Cadence">
+                    <label class="radio"><input type="radio" name="cad" value="daily" checked><div><b>Most days</b><span>A small daily habit.</span></div></label>
+                    <label class="radio"><input type="radio" name="cad" value="weekly"><div><b>Every week</b><span>A few times, spread how you like.</span></div></label>
+                    <label class="radio"><input type="radio" name="cad" value="monthly"><div><b>Every month</b><span>A slower, steadier rhythm.</span></div></label>
+                    <label class="radio"><input type="radio" name="cad" value="open"><div><b>No target, just show me</b><span>See what happens without a goal.</span></div></label>
+                  </div>
+                  <div class="field" id="targetField" style="margin-top:14px">
+                    <span class="t">Times I'd like to show up</span>
+                    <div class="inline"><input type="number" id="target" min="1" max="7" value="3" style="width:72px"> <span id="per">a week</span></div>
+                    <div class="help">A gentle aim, not a requirement. Missing it never shows up as a miss.</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card">
+                <header><h2>What counts as showing up</h2><p>Pick everything that feels like real writing time to you.</p></header>
+                <div class="body">
+                  <label class="chk"><input type="checkbox" id="c-publish" checked><div><b style="font-weight:500">Publishing a post</b></div></label>
+                  <label class="chk"><input type="checkbox" id="c-draft" checked><div><b style="font-weight:500">Working on a draft</b><div class="help" style="margin:0">Saving or editing an unpublished post.</div></div></label>
+                  <label class="chk"><input type="checkbox" id="c-idea" checked><div><b style="font-weight:500">Ideas and outlines</b><span class="guess">my guess</span><div class="help" style="margin:0">Quick notes you log yourself. WordPress can't see these on its own.</div></div></label>
+                  <label class="chk"><input type="checkbox" id="c-edit"><div><b style="font-weight:500">Updating an older post</b></div></label>
+                </div>
+              </section>
+
+              <section class="card">
+                <header><h2>In your own words</h2></header>
+                <div class="body">
+                  <div class="field">
+                    <label class="t" for="intent">What are you doing this for?</label>
+                    <input type="text" id="intent" value="Write a little, most days." maxlength="80">
+                    <div class="help">Shown at the top of your dashboard widget. Leave it empty to hide it.</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card">
+                <header><h2>Quiet stretches</h2><p>Life happens. Resting is part of a rhythm.</p></header>
+                <div class="body">
+                  <div class="field sw"><button role="switch" aria-checked="false" id="rest" aria-label="Rest for a while"></button><div><b>Rest for a while</b><span>Hides targets and nudges until you're back. Past days stay as they were.</span></div></div>
+                  <div class="field" id="restDates" style="display:none;margin-top:12px">
+                    <span class="t">Until</span>
+                    <input type="date" value="2026-11-15"> <span class="help" style="margin-left:6px">Optional. Leave blank to come back whenever.</span>
+                  </div>
+                  <p class="help" style="margin-top:12px">Weeks without writing are never counted against you. There are no streaks to lose.</p>
+                </div>
+              </section>
+
+
+              <section class="card">
+                <header><h2>Reminders <span class="guess">my guess</span></h2><p>Off unless you want one. A nudge you chose, in your words, never a scolding.</p></header>
+                <div class="body">
+                  <div class="field sw"><button role="switch" aria-checked="false" id="rem" aria-label="Remind me"></button><div><b>Remind me to write</b><span>Sent only to you.</span></div></div>
+                  <div id="remOpts" style="display:none;margin-top:14px">
+                    <div class="field">
+                      <span class="t">When</span>
+                      <div class="inline">
+                        <select id="remDay"><option>Every day</option><option>Weekdays</option><option selected>Mondays</option><option>Wednesdays</option><option>Fridays</option><option>Sundays</option></select>
+                        <span>at</span>
+                        <select><option>8:00 am</option><option selected>9:00 am</option><option>12:00 pm</option><option>6:00 pm</option><option>8:00 pm</option></select>
+                      </div>
+                      <div class="help">In your site's time zone (UTC-5).</div>
+                    </div>
+                    <div class="field">
+                      <span class="t">How</span>
+                      <label class="chk"><input type="checkbox" checked><div>Email me at derek@example.com</div></label>
+                      <label class="chk"><input type="checkbox"><div>Show a quiet note on my dashboard</div></label>
+                    </div>
+                    <label class="chk"><input type="checkbox" checked><div>Skip it if I've already shown up<div class="help" style="margin:0">So it never nags after you've done the thing.</div></div></label>
+                    <div class="field" style="margin-top:12px">
+                      <label class="t" for="remMsg">What it says</label>
+                      <input type="text" id="remMsg" value="Your rhythm is here whenever you are. Want to write a little?" maxlength="120">
+                      <div class="help">Resting pauses reminders automatically. Every email has a one-click way to turn them off.</div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card">
+                <header><h2>Your dashboard widget</h2></header>
+                <div class="body">
+                  <div class="field">
+                    <label class="t" for="look">Show</label>
+                    <select id="look"><option value="auto">Match my pace (recommended)</option><option value="dots">Calendar of dots</option><option value="weeks">Week by week</option></select>
+                  </div>
+                  <label class="chk"><input type="checkbox" id="showsum" checked><div>Show the one-line summary</div></label>
+                  <label class="chk"><input type="checkbox" id="showlog" checked><div>Show "I showed up today"<span class="guess">my guess</span></div></label>
+                </div>
+              </section>
+
+              <section class="card">
+                <header><h2>Privacy and your data</h2></header>
+                <div class="body">
+                  <div class="callout">Your rhythm is private to your account. It's never counted in traffic, stats, or anything other people see. Admins can't see it either.<span class="guess">my guess</span></div>
+                  <div class="foot"><button class="btn">Export my data</button><button class="danger">Clear my history</button></div>
+                </div>
+              </section>
+
+              <div class="foot"><button class="btn primary">Save changes</button><span class="savednote">Changes show in the preview as you make them.</span></div>
+            </div>
+
+            <aside class="aside">
+              <p class="lbl">Live preview of your dashboard widget</p>
+              <div id="preview"></div>
+            </aside>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- fake data ---------- */
+const TODAY = new Date(2026,9,27);
+function h(n){let x=Math.sin(n*9301+49297)*233280;return x-Math.floor(x)}
+function dayData(back){ // back = days before today
+  const d = new Date(TODAY); d.setDate(d.getDate()-back);
+  const r = h(back+3);
+  let types=[];
+  if(back>=40 && back<=62) return {d,types}; // a quiet stretch
+  if(r>.45){ types.push(r>.93?'p':(r>.62?'d':(r>.5?'i':'d'))); }
+  if(r>.8 && r<.9) types.push('i');
+  return {d,types};
+}
+function loadDays(n){ const out=[]; for(let i=n-1;i>=0;i--) out.push(dayData(i)); return out; }
+const OPTS={}; // visible type filter
+function pickType(types,s){
+  const ok=[];
+  if(s.counts.publish) ok.push('p'); if(s.counts.draft) ok.push('d'); if(s.counts.idea) ok.push('i');
+  const hit=types.filter(t=>ok.includes(t)); // edits not mocked
+  return ['p','d','i'].find(t=>hit.includes(t))||'';
+}
+/* ---------- widget render ---------- */
+function dotsGrid(s,rest){
+  const days=loadDays(182); // 26 weeks
+  // align so that first column starts on Sunday-ish: pad
+  const first=days[0].d.getDay();
+  const cells=Array(first).fill(null).concat(days);
+  const cols=[]; for(let i=0;i<cells.length;i+=7) cols.push(cells.slice(i,i+7));
+  let monthHTML='',last=-1;
+  cols.forEach((c,ci)=>{const f=c.find(x=>x); if(!f) return; const m=f.d.getMonth(); if(m!==last){const first=last===-1;last=m; if(first) return; monthHTML+=`<span style="left:${ci*13}px">${f.d.toLocaleString('en',{month:'short'})}</span>`}});
+  const gridHTML=cols.map(c=>`<div class="col">${c.map((x,i)=>{
+    if(!x) return '<div class="dot" style="visibility:hidden"></div>';
+    const isToday=x.d.getTime()===TODAY.getTime();
+    const t=pickType(x.types,s);
+    const inRest=rest&&x.d>=new Date(2026,9,14);
+    return `<div class="dot ${t} ${isToday?'today':''} ${inRest&&!t?'rest':''}" title="${x.d.toDateString()}"></div>`}).join('')}</div>`).join('');
+  return `<div class="months">${monthHTML}</div><div class="grid">${gridHTML}</div>
+  <div class="legend"><span><i class="dot p"></i>Published</span><span><i class="dot d"></i>Drafted</span><span><i class="dot i"></i>Idea or outline</span></div>`;
+}
+function weeksView(s,rest){
+  const target=s.cadence==='open'?0:Math.min(+s.target||2,5);
+  let out='';
+  for(let w=11;w>=0;w--){
+    let n=0;
+    for(let d=0;d<7;d++){const x=dayData(w*7+d); if(pickType(x.types,s)) n++;}
+    const slots=Math.max(target,2); n=Math.min(n,slots);
+    let dots='';
+    for(let i=0;i<slots;i++) dots+=`<div class="dot ${i<n?'p':''}" style="${i<n?'':'background:var(--empty)'}"></div>`;
+    const dt=new Date(TODAY);dt.setDate(dt.getDate()-w*7);
+    out+=`<div class="wk">${dots}<small>${dt.toLocaleString('en',{month:'short'}).slice(0,3)==='Oct'&&w<1?'now':(w%4===0?dt.toLocaleString('en',{month:'short',day:'numeric'}):'')}</small></div>`;
+  }
+  return `<div class="weeks">${out}</div><div class="legend"><span><i class="dot p" style="border-radius:50%"></i>A time you showed up</span></div>`;
+}
+function monthsView(s){
+  let out='';
+  for(let m=11;m>=0;m--){
+    let n=0; for(let d=0;d<30;d++){const x=dayData(m*30+d); if(pickType(x.types,s)) n++;}
+    const shade=n===0?'':(n<4?'i':(n<9?'d':'p'));
+    const dt=new Date(TODAY);dt.setMonth(dt.getMonth()-m);
+    out+=`<div style="text-align:center"><div class="dot ${shade}" style="width:26px;height:26px;border-radius:6px"></div><small style="font-size:10px;color:var(--fg-muted)">${dt.toLocaleString('en',{month:'short'})}</small></div>`;
+  }
+  return `<div style="display:flex;gap:6px;flex-wrap:wrap">${out}</div>`;
+}
+function summary(s,rest,thisWeek){
+  if(rest) return `<p>Resting until Nov 15. <span class="muted">Welcome back whenever.</span></p>`;
+  if(s.cadence==='open') return `<p>${thisWeek} ${thisWeek===1?'day':'days'} this week.</p>`;
+  const per={daily:'week',weekly:'week',monthly:'month'}[s.cadence];
+  if(s.cadence==='monthly') return `<p>2 times this month. <span class="muted">Your pace: ${s.target} a month.</span></p>`;
+  if(thisWeek===0) return `<p>A quiet week so far. <span class="muted">That's part of it.</span></p>`;
+  return `<p>${thisWeek} ${thisWeek===1?'day':'days'} this week. <span class="muted">Your pace: ${s.target} a ${per}.</span></p>`;
+}
+function widget(s,o={}){
+  const rest=!!o.rest;
+  let body;
+  if(o.empty){
+    body=`<div class="empty"><div class="art">${'<i class="dot i" style="width:14px;height:14px"></i><i class="dot" style="width:14px;height:14px"></i><i class="dot d" style="width:14px;height:14px"></i><i class="dot" style="width:14px;height:14px"></i><i class="dot p" style="width:14px;height:14px"></i>'}</div>
+    <h3>Set a pace that suits you</h3><p>Choose how often you'd like to write, and what counts. No pressure, nothing public.</p>
+    <button class="btn primary">Choose your pace</button></div>`;
+    return `<div class="postbox"><h2>Blog Rhythm</h2><div class="inside">${body}</div></div>`;
+  }
+  const look = s.look==='auto' ? ({daily:'dots',weekly:'weeks',monthly:'months',open:'dots'}[s.cadence]) : s.look;
+  const visual = look==='weeks'?weeksView(s,rest):(look==='months'?monthsView(s):dotsGrid(s,rest));
+  let thisWeek=0; for(let d=0;d<7;d++){ if(pickType(dayData(d).types,s)) thisWeek++; }
+  thisWeek = o.week!=null?o.week:thisWeek;
+  const intent = s.intention ? `<p class="intent">${s.intention.replace(/</g,'&lt;')}</p>` : '';
+  const sum = s.showsum ? `<div class="sum">${summary(s,rest,thisWeek)}${s.showlog&&!rest?'<button class="btn">I showed up today</button>':''}</div>` : (s.showlog&&!rest?'<div class="sum"><span></span><button class="btn">I showed up today</button></div>':'');
+  return `<div class="postbox"><h2>Blog Rhythm <a href="#">Settings</a></h2><div class="inside">${intent}${visual}${sum}</div></div>`;
+}
+/* ---------- state ---------- */
+const base={cadence:'daily',target:3,counts:{publish:true,draft:true,idea:true,edit:false},intention:'Write a little, most days.',look:'auto',showsum:true,showlog:true};
+/* four widget states */
+const slots=[
+ ['Most days, active week', widget({...base},{week:3})],
+ ['Every week, 2 a week', widget({...base,cadence:'weekly',target:2,intention:'Two posts a week, drafts included.'},{week:2})],
+ ['Resting for a while', widget({...base},{rest:true})],
+ ['Brand new, before setup', widget({...base},{empty:true})]
+];
+document.getElementById('widgets').innerHTML=slots.map(s=>`<div class="slot"><small>${s[0]}</small>${s[1]}</div>`).join('');
+/* ---------- settings interactivity ---------- */
+const st={...base,counts:{...base.counts},rest:false};
+function paint(){
+  document.getElementById('preview').innerHTML=widget(st,{rest:st.rest});
+  document.getElementById('targetField').style.display = st.cadence==='open'?'none':'block';
+  document.getElementById('per').textContent = st.cadence==='monthly'?'a month':'a week';
+}
+document.querySelectorAll('input[name=cad]').forEach(r=>r.addEventListener('change',e=>{st.cadence=e.target.value; if(st.cadence==='monthly'){st.target=4;document.getElementById('target').value=4}else if(st.cadence==='weekly'){st.target=2;document.getElementById('target').value=2}else if(st.cadence==='daily'){st.target=3;document.getElementById('target').value=3} paint()}));
+document.getElementById('target').addEventListener('input',e=>{st.target=e.target.value;paint()});
+['publish','draft','idea','edit'].forEach(k=>document.getElementById('c-'+k).addEventListener('change',e=>{st.counts[k]=e.target.checked;paint()}));
+document.getElementById('intent').addEventListener('input',e=>{st.intention=e.target.value;paint()});
+document.getElementById('look').addEventListener('change',e=>{st.look=e.target.value;paint()});
+document.getElementById('showsum').addEventListener('change',e=>{st.showsum=e.target.checked;paint()});
+document.getElementById('showlog').addEventListener('change',e=>{st.showlog=e.target.checked;paint()});
+const rest=document.getElementById('rest');
+rest.addEventListener('click',()=>{const on=rest.getAttribute('aria-checked')!=='true';rest.setAttribute('aria-checked',on);st.rest=on;document.getElementById('restDates').style.display=on?'block':'none';paint()});
+
+const rem=document.getElementById('rem');
+rem.addEventListener('click',()=>{const on=rem.getAttribute('aria-checked')!=='true';rem.setAttribute('aria-checked',on);document.getElementById('remOpts').style.display=on?'block':'none'});
+paint();
+/* view switch */
+document.querySelectorAll('.switcher button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.switcher button').forEach(x=>x.classList.toggle('on',x===b));
+  const v=b.dataset.v;
+  document.getElementById('v-widget').classList.toggle('on',v==='widget');
+  document.getElementById('v-settings').classList.toggle('on',v==='settings');
+  document.getElementById('submenu').style.display=v==='settings'?'block':'none';
+}));
+</script>
+</body>
+</html>
