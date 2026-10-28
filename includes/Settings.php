@@ -188,7 +188,7 @@ class Settings {
 		$reminders['widget_note']  = self::bool( $rem_in, 'widget_note', $rem['widget_note'] );
 		$reminders['skip_if_done'] = self::bool( $rem_in, 'skip_if_done', $rem['skip_if_done'] );
 		if ( array_key_exists( 'message', $rem_in ) ) {
-			$message             = self::text( $rem_in['message'], self::MESSAGE_MAX );
+			$message              = self::text( $rem_in['message'], self::MESSAGE_MAX );
 			$reminders['message'] = '' === $message ? $rem_def['message'] : $message;
 		} else {
 			$reminders['message'] = $rem['message'];

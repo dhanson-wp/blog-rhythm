@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Blog Rhythm
  * Description:       A private, per-writer dashboard widget that shows your own writing rhythm.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 7.1
  * Requires PHP:      7.4
  * Author:            Derek Hanson
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'BLOG_RHYTHM_VERSION', '0.1.0' );
+define( 'BLOG_RHYTHM_VERSION', '1.0.0' );
 define( 'BLOG_RHYTHM_FILE', __FILE__ );
 define( 'BLOG_RHYTHM_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLOG_RHYTHM_URL', plugin_dir_url( __FILE__ ) );

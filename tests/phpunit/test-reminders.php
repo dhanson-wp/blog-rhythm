@@ -325,7 +325,12 @@ class Test_Reminders extends WP_UnitTestCase {
 	}
 
 	public function test_note_due_respects_day_hour_rest_and_shown_up() {
-		$this->enable( array( 'widget_note' => true, 'email' => false ) );
+		$this->enable(
+			array(
+				'widget_note' => true,
+				'email'       => false,
+			)
+		);
 		$this->assertSame( 'Want to write a little?', Reminders::note_due( $this->me, $this->now( '2026-05-13 15:00:00' ) ) );
 		$this->assertNull( Reminders::note_due( $this->me, $this->now( '2026-05-13 08:00:00' ) ) );
 		$this->assertNull( Reminders::note_due( $this->me, $this->now( '2026-05-14 10:00:00' ) ) );

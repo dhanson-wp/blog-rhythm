@@ -67,9 +67,9 @@ class Test_Log extends WP_UnitTestCase {
 
 		self::factory()->post->create(
 			array(
-				'post_author'   => $this->user_id,
-				'post_status'   => 'publish',
-				'post_date'     => $yesterday . ' 10:00:00',
+				'post_author' => $this->user_id,
+				'post_status' => 'publish',
+				'post_date'   => $yesterday . ' 10:00:00',
 			)
 		);
 		update_user_meta(

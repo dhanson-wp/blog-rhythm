@@ -2,10 +2,11 @@
 
 // Let the page sit flush in wp-admin's content area.
 .blog-rhythm-settings-root {
-	margin: 0 0 0 -20px;
+	margin: 0;
+	margin-inline-start: -20px;
 
 	@media (max-width: 782px) {
-		margin-left: -10px;
+		margin-inline-start: -10px;
 	}
 }
 

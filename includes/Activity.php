@@ -73,7 +73,6 @@ class Activity {
 				'orderby'                => 'ID',
 				'order'                  => 'ASC',
 				'no_found_rows'          => true,
-				'suppress_filters'       => true,
 				'cache_results'          => false,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
@@ -107,7 +106,6 @@ class Activity {
 				'orderby'                => 'ID',
 				'order'                  => 'ASC',
 				'no_found_rows'          => true,
-				'suppress_filters'       => true,
 				'cache_results'          => false,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
@@ -163,8 +161,8 @@ class Activity {
 		}
 
 		foreach ( $mine as $rev ) {
-			$pid  = (int) $rev->post_parent;
-			$day  = self::day( $rev->post_modified_gmt, $rev->post_modified );
+			$pid = (int) $rev->post_parent;
+			$day = self::day( $rev->post_modified_gmt, $rev->post_modified );
 			if ( ! $day ) {
 				continue;
 			}

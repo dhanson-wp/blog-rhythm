@@ -34,7 +34,7 @@ function Dots( { days, today, weekStart, resting } ) {
 		<div className="blog-rhythm-dots">
 			<div className="blog-rhythm-month-labels">
 				{ monthLabels.map( ( { index, label } ) => (
-					<span key={ index } style={ { left: index * COLUMN_STEP } }>
+					<span key={ index } style={ { insetInlineStart: index * COLUMN_STEP } }>
 						{ label }
 					</span>
 				) ) }

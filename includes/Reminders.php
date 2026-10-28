@@ -201,7 +201,7 @@ class Reminders {
 	}
 
 	/**
-	 * admin-post handler for the turn-off link.
+	 * Handle the turn-off link (admin-post).
 	 */
 	public static function handle_turn_off(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Signed link; the HMAC token is the credential.

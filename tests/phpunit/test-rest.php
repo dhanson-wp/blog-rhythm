@@ -157,7 +157,12 @@ class Test_Rest extends WP_UnitTestCase {
 	}
 
 	public function test_weeks_param_clamped() {
-		foreach ( array( '0' => 1, '999' => 53, 'abc' => 26, '-4' => 1 ) as $input => $weeks ) {
+		foreach ( array(
+			'0'   => 1,
+			'999' => 53,
+			'abc' => 26,
+			'-4'  => 1,
+		) as $input => $weeks ) {
 			$response = $this->request( 'GET', '/rhythm', null, array( 'weeks' => $input ) );
 			$this->assertSame( 200, $response->get_status(), $input );
 		}
@@ -172,7 +177,14 @@ class Test_Rest extends WP_UnitTestCase {
 	public function test_weeks_range_covers_expected_start() {
 		$today = Log::today();
 		$old   = ( new DateTimeImmutable( $today, wp_timezone() ) )->modify( '-40 days' )->format( 'Y-m-d' );
-		update_user_meta( $this->user_id, Log::META_KEY, array( 'entries' => array( $old => array( 'idea' ) ), 'cleared_before' => '' ) );
+		update_user_meta(
+			$this->user_id,
+			Log::META_KEY,
+			array(
+				'entries'        => array( $old => array( 'idea' ) ),
+				'cleared_before' => '',
+			)
+		);
 
 		$one = $this->request( 'GET', '/rhythm', null, array( 'weeks' => 1 ) )->get_data();
 		$this->assertSame( array(), (array) $one['days'] );
@@ -183,7 +195,14 @@ class Test_Rest extends WP_UnitTestCase {
 	public function test_clear_history_hides_earlier_days() {
 		$today     = Log::today();
 		$yesterday = ( new DateTimeImmutable( $today, wp_timezone() ) )->modify( '-1 day' )->format( 'Y-m-d' );
-		update_user_meta( $this->user_id, Log::META_KEY, array( 'entries' => array( $yesterday => array( 'idea' ) ), 'cleared_before' => '' ) );
+		update_user_meta(
+			$this->user_id,
+			Log::META_KEY,
+			array(
+				'entries'        => array( $yesterday => array( 'idea' ) ),
+				'cleared_before' => '',
+			)
+		);
 
 		$before = $this->request( 'GET', '/rhythm' )->get_data();
 		$this->assertArrayHasKey( $yesterday, (array) $before['days'] );

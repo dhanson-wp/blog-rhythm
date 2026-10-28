@@ -164,7 +164,13 @@ class Test_Rhythm extends WP_UnitTestCase {
 	}
 
 	public function test_summary_for_open_pace_has_zero_target() {
-		Settings::update( $this->me, array( 'pace' => 'open', 'target' => 5 ) );
+		Settings::update(
+			$this->me,
+			array(
+				'pace'   => 'open',
+				'target' => 5,
+			)
+		);
 		$this->post( '2026-05-12 10:00:00' );
 
 		$s = Rhythm::summary( $this->me, $this->now() );
@@ -177,7 +183,13 @@ class Test_Rhythm extends WP_UnitTestCase {
 	}
 
 	public function test_summary_counts_only_through_today_and_period() {
-		Settings::update( $this->me, array( 'pace' => 'weekly', 'target' => 3 ) );
+		Settings::update(
+			$this->me,
+			array(
+				'pace'   => 'weekly',
+				'target' => 3,
+			)
+		);
 		$this->post( '2026-05-10 10:00:00' ); // Previous week.
 		$this->post( '2026-05-11 10:00:00' );
 		$this->post( '2026-05-13 09:00:00' );
@@ -190,7 +202,13 @@ class Test_Rhythm extends WP_UnitTestCase {
 	}
 
 	public function test_summary_reports_resting() {
-		Settings::update( $this->me, array( 'resting' => true, 'rest_until' => '2026-05-20' ) );
+		Settings::update(
+			$this->me,
+			array(
+				'resting'    => true,
+				'rest_until' => '2026-05-20',
+			)
+		);
 		$s = Rhythm::summary( $this->me, $this->now() );
 		$this->assertTrue( $s['resting'] );
 		$this->assertSame( '2026-05-20', $s['rest_until'] );
@@ -219,7 +237,13 @@ class Test_Rhythm extends WP_UnitTestCase {
 	}
 
 	public function test_over_target_reports_actual_count_without_flag() {
-		Settings::update( $this->me, array( 'pace' => 'weekly', 'target' => 1 ) );
+		Settings::update(
+			$this->me,
+			array(
+				'pace'   => 'weekly',
+				'target' => 1,
+			)
+		);
 		$this->post( '2026-05-11 10:00:00' );
 		$this->post( '2026-05-12 10:00:00' );
 		$this->post( '2026-05-13 10:00:00' );

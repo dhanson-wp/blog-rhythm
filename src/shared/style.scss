@@ -1,6 +1,8 @@
 // Blog Rhythm visuals. Colors come from core --wpds-* tokens (the wp-theme
 // style handle); the second argument to var() is only a safety fallback.
-// No transitions are used, so prefers-reduced-motion needs no special case.
+// No transitions or animations are used here, so prefers-reduced-motion needs
+// no special case. If one is ever added, wrap it in
+// @media (prefers-reduced-motion: no-preference).
 
 .blog-rhythm-viz {
 	--blog-rhythm-published: var(--wpds-color-background-interactive-brand-strong, #3858e9);
@@ -143,8 +145,70 @@
 
 		i {
 			display: inline-block;
-			margin-right: 4px;
+			margin-inline-end: 4px;
 			vertical-align: -1px;
+		}
+	}
+}
+
+// Windows High Contrast and other forced-colors modes drop backgrounds and
+// shadows, which would erase the solid / ring / dot shape cues. Redraw them
+// with borders, outlines, and system colors only.
+@media (forced-colors: active) {
+	.blog-rhythm-viz {
+		.blog-rhythm-cell,
+		.blog-rhythm-block {
+			forced-color-adjust: none;
+			border: 1px solid GrayText;
+			background: Canvas;
+			box-shadow: none;
+		}
+
+		// Published: solid.
+		.blog-rhythm-cell.is-published {
+			border-color: CanvasText;
+			background: CanvasText;
+		}
+
+		// Drafted: ring.
+		.blog-rhythm-cell.is-drafted {
+			border: 3px solid CanvasText;
+			background: Canvas;
+		}
+
+		// Idea: small centered dot.
+		.blog-rhythm-cell.is-idea {
+			border-color: CanvasText;
+			background: radial-gradient(circle, CanvasText 0 1.5px, Canvas 2px);
+		}
+
+		.blog-rhythm-cell.is-resting {
+			border-color: CanvasText;
+			background: repeating-linear-gradient(45deg, Canvas 0 2px, GrayText 2px 3px);
+		}
+
+		.blog-rhythm-cell.is-today {
+			outline: 2px solid Highlight;
+		}
+
+		.blog-rhythm-cell.is-blank {
+			border: 0;
+		}
+
+		// Month blocks: shade becomes border style, strongest is solid.
+		.blog-rhythm-block.is-light {
+			border: 2px dotted CanvasText;
+			background: Canvas;
+		}
+
+		.blog-rhythm-block.is-mid {
+			border: 2px dashed CanvasText;
+			background: Canvas;
+		}
+
+		.blog-rhythm-block.is-strong {
+			border-color: CanvasText;
+			background: CanvasText;
 		}
 	}
 }

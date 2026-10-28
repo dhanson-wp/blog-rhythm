@@ -47,7 +47,7 @@ export default function QuietStretches( {
 					className="blog-rhythm-help"
 				>
 					{ __(
-						'Weeks without writing are never counted against you. There are no streaks to lose.',
+						'A quiet stretch is never counted against you. Rest as long as you need.',
 						'blog-rhythm'
 					) }
 				</Text>

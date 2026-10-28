@@ -49,7 +49,7 @@ class Settings_Page {
 	 * Add the page under Posts for everyone who can write posts.
 	 */
 	public function add_page() {
-		$hook = add_submenu_page(
+		$hook       = add_submenu_page(
 			'edit.php',
 			__( 'Blog Rhythm', 'blog-rhythm' ),
 			__( 'Blog Rhythm', 'blog-rhythm' ),

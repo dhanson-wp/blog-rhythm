@@ -47,16 +47,16 @@ class Test_Activity extends WP_UnitTestCase {
 		);
 	}
 
-	private function revision( int $parent, int $author, string $when ): int {
+	private function revision( int $parent_id, int $author, string $when ): int {
 		return wp_insert_post(
 			array(
 				'post_type'    => 'revision',
 				'post_status'  => 'inherit',
-				'post_parent'  => $parent,
+				'post_parent'  => $parent_id,
 				'post_author'  => $author,
 				'post_title'   => 'rev',
 				'post_content' => 'rev',
-				'post_name'    => $parent . '-revision-v1-' . wp_generate_password( 6, false ),
+				'post_name'    => $parent_id . '-revision-v1-' . wp_generate_password( 6, false ),
 				'post_date'    => $when,
 			)
 		);
@@ -89,11 +89,33 @@ class Test_Activity extends WP_UnitTestCase {
 	}
 
 	public function test_draft_pending_future_are_drafted() {
-		$this->post( array( 'post_status' => 'draft', 'post_date' => '2026-05-01 09:00:00' ) );
-		$this->post( array( 'post_status' => 'pending', 'post_date' => '2026-05-02 09:00:00' ) );
-		$future = $this->post( array( 'post_status' => 'future', 'post_date' => '2099-01-01 09:00:00' ) );
+		$this->post(
+			array(
+				'post_status' => 'draft',
+				'post_date'   => '2026-05-01 09:00:00',
+			)
+		);
+		$this->post(
+			array(
+				'post_status' => 'pending',
+				'post_date'   => '2026-05-02 09:00:00',
+			)
+		);
+		$future = $this->post(
+			array(
+				'post_status' => 'future',
+				'post_date'   => '2099-01-01 09:00:00',
+			)
+		);
 		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_modified' => '2026-05-03 09:00:00', 'post_modified_gmt' => '2026-05-03 13:00:00' ), array( 'ID' => $future ) );
+		$wpdb->update(
+			$wpdb->posts,
+			array(
+				'post_modified'     => '2026-05-03 09:00:00',
+				'post_modified_gmt' => '2026-05-03 13:00:00',
+			),
+			array( 'ID' => $future )
+		);
 		clean_post_cache( $future );
 		$days = $this->range();
 		$this->assertSame( array( 'drafted' ), $days['2026-05-01'] );
@@ -133,14 +155,26 @@ class Test_Activity extends WP_UnitTestCase {
 		$id = $this->post( array( 'post_status' => 'draft' ) );
 		$this->revision( $id, $this->other, '2026-06-01 12:00:00' );
 		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_modified' => '2026-06-01 12:00:00', 'post_modified_gmt' => '2026-06-01 16:00:00' ), array( 'ID' => $id ) );
+		$wpdb->update(
+			$wpdb->posts,
+			array(
+				'post_modified'     => '2026-06-01 12:00:00',
+				'post_modified_gmt' => '2026-06-01 16:00:00',
+			),
+			array( 'ID' => $id )
+		);
 		clean_post_cache( $id );
 		// Another author saved it, so neither post_date nor post_modified is attributed to me.
 		$this->assertSame( array(), $this->range() );
 	}
 
 	public function test_my_revision_counts_as_drafted() {
-		$id = $this->post( array( 'post_status' => 'draft', 'post_date' => '2026-05-01 09:00:00' ) );
+		$id = $this->post(
+			array(
+				'post_status' => 'draft',
+				'post_date'   => '2026-05-01 09:00:00',
+			)
+		);
 		$this->revision( $id, $this->me, '2026-05-03 09:00:00' );
 		$days = $this->range();
 		$this->assertSame( array( 'drafted' ), $days['2026-05-03'] );
@@ -164,7 +198,14 @@ class Test_Activity extends WP_UnitTestCase {
 	public function test_published_post_modified_alone_is_not_updated() {
 		$id = $this->post();
 		global $wpdb;
-		$wpdb->update( $wpdb->posts, array( 'post_modified' => '2026-07-01 12:00:00', 'post_modified_gmt' => '2026-07-01 16:00:00' ), array( 'ID' => $id ) );
+		$wpdb->update(
+			$wpdb->posts,
+			array(
+				'post_modified'     => '2026-07-01 12:00:00',
+				'post_modified_gmt' => '2026-07-01 16:00:00',
+			),
+			array( 'ID' => $id )
+		);
 		clean_post_cache( $id );
 		$this->assertSame( array( '2026-05-10' => array( 'published' ) ), $this->range() );
 	}
@@ -215,7 +256,10 @@ class Test_Activity extends WP_UnitTestCase {
 			$this->me,
 			Log::META_KEY,
 			array(
-				'entries'        => array( '2026-05-05' => array( 'idea' ), '2026-05-21' => array( 'idea' ) ),
+				'entries'        => array(
+					'2026-05-05' => array( 'idea' ),
+					'2026-05-21' => array( 'idea' ),
+				),
 				'cleared_before' => '2026-05-20',
 			)
 		);
@@ -231,10 +275,21 @@ class Test_Activity extends WP_UnitTestCase {
 	 */
 	public function test_editor_save_of_my_unpublished_post_is_not_attributed( string $status ) {
 		$date = 'future' === $status ? '2099-01-01 09:00:00' : '2026-05-01 09:00:00';
-		$id   = $this->post( array( 'post_status' => $status, 'post_date' => $date, 'post_content' => 'one' ) );
+		$id   = $this->post(
+			array(
+				'post_status'  => $status,
+				'post_date'    => $date,
+				'post_content' => 'one',
+			)
+		);
 
 		wp_set_current_user( $this->other );
-		wp_update_post( array( 'ID' => $id, 'post_content' => 'two by the editor' ) );
+		wp_update_post(
+			array(
+				'ID'           => $id,
+				'post_content' => 'two by the editor',
+			)
+		);
 		wp_set_current_user( 0 );
 
 		$others = array_filter(

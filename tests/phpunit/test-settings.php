@@ -41,12 +41,52 @@ class Test_Settings extends WP_UnitTestCase {
 	}
 
 	public function test_sanitize_clamps_target() {
-		$this->assertSame( 1, Settings::sanitize( array( 'pace' => 'weekly', 'target' => 0 ) )['target'] );
-		$this->assertSame( 7, Settings::sanitize( array( 'pace' => 'weekly', 'target' => 99 ) )['target'] );
+		$this->assertSame(
+			1,
+			Settings::sanitize(
+				array(
+					'pace'   => 'weekly',
+					'target' => 0,
+				)
+			)['target']
+		);
+		$this->assertSame(
+			7,
+			Settings::sanitize(
+				array(
+					'pace'   => 'weekly',
+					'target' => 99,
+				)
+			)['target']
+		);
 		$this->assertSame( 3, Settings::sanitize( array( 'target' => 'abc' ) )['target'] );
-		$this->assertSame( 20, Settings::sanitize( array( 'pace' => 'monthly', 'target' => 20 ) )['target'] );
-		$this->assertSame( 31, Settings::sanitize( array( 'pace' => 'monthly', 'target' => 99 ) )['target'] );
-		$this->assertSame( 7, Settings::sanitize( array( 'pace' => 'open', 'target' => 99 ) )['target'] );
+		$this->assertSame(
+			20,
+			Settings::sanitize(
+				array(
+					'pace'   => 'monthly',
+					'target' => 20,
+				)
+			)['target']
+		);
+		$this->assertSame(
+			31,
+			Settings::sanitize(
+				array(
+					'pace'   => 'monthly',
+					'target' => 99,
+				)
+			)['target']
+		);
+		$this->assertSame(
+			7,
+			Settings::sanitize(
+				array(
+					'pace'   => 'open',
+					'target' => 99,
+				)
+			)['target']
+		);
 	}
 
 	public function test_sanitize_strips_html_and_truncates_intention() {
@@ -105,7 +145,13 @@ class Test_Settings extends WP_UnitTestCase {
 		$user = self::factory()->user->create( array( 'role' => 'author' ) );
 		$this->assertSame( Settings::defaults(), Settings::get( $user ) );
 
-		$stored = Settings::update( $user, array( 'pace' => 'weekly', 'reminders' => array( 'hour' => 7 ) ) );
+		$stored = Settings::update(
+			$user,
+			array(
+				'pace'      => 'weekly',
+				'reminders' => array( 'hour' => 7 ),
+			)
+		);
 		$this->assertSame( 'weekly', $stored['pace'] );
 		$this->assertSame( 7, $stored['reminders']['hour'] );
 		$this->assertSame( 'mon', $stored['reminders']['day'] );
@@ -128,7 +174,15 @@ class Test_Settings extends WP_UnitTestCase {
 		$this->assertSame( 32, strlen( $first ) );
 
 		// Still on: no rotation.
-		Settings::update( $user, array( 'reminders' => array( 'enabled' => true, 'hour' => 8 ) ) );
+		Settings::update(
+			$user,
+			array(
+				'reminders' => array(
+					'enabled' => true,
+					'hour'    => 8,
+				),
+			)
+		);
 		$this->assertSame( $first, get_user_meta( $user, 'blog_rhythm_reminder_secret', true ) );
 
 		// Off: flag deleted, secret kept.

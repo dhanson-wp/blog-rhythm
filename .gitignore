@@ -6,3 +6,4 @@ reference/
 vendor/
 build/
 .phpunit.result.cache
+*.zip
