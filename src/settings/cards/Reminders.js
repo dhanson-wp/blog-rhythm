@@ -23,13 +23,20 @@ function dayItems() {
 	];
 }
 
-function hourItems() {
+/**
+ * One option per hour, labeled in the site's time format. The date string
+ * carries an explicit UTC offset and is formatted in UTC, so the browser's
+ * own time zone never shifts the hour.
+ *
+ * @return {Array<{value: string, label: string}>} Items.
+ */
+export function hourItems() {
 	const format = ( getDateSettings().formats || {} ).time || 'g:i a';
 	return Array.from( { length: 24 }, ( _, hour ) => ( {
 		value: String( hour ),
 		label: dateI18n(
 			format,
-			`2026-01-01T${ String( hour ).padStart( 2, '0' ) }:00:00`,
+			`2026-01-01T${ String( hour ).padStart( 2, '0' ) }:00:00Z`,
 			'UTC'
 		),
 	} ) );

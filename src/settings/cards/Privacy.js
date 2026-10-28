@@ -8,7 +8,7 @@ export default function Privacy( { onExport, onClear, exporting } ) {
 			<Stack direction="column" gap="lg">
 				<Text render={ <p /> } className="blog-rhythm-callout">
 					{ __(
-						"Your rhythm is private to your account. It's never counted in traffic, stats, or anything other people see. Admins can't see it either.",
+						"Your rhythm is private to your account. It's never counted in traffic, stats, or anything other people see. There's no admin screen for it, either.",
 						'blog-rhythm'
 					) }
 				</Text>

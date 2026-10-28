@@ -200,6 +200,9 @@ describe( 'Settings page', () => {
 		await setup();
 		api.clearHistory.mockResolvedValue( rhythm( { days: {} } ) );
 
+		expect( screen.getByText( /There's no admin screen for it, either\./ ) ).toBeTruthy();
+		expect( screen.queryByText( /Admins can't see it/ ) ).toBeNull();
+
 		fireEvent.click( screen.getByRole( 'button', { name: 'Clear my history' } ) );
 		const dialog = await screen.findByRole( 'alertdialog' );
 		expect( within( dialog ).getByText( /hidden, not deleted/ ) ).toBeTruthy();
