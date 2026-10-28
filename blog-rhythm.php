@@ -40,7 +40,9 @@ spl_autoload_register(
  * Activation stub.
  */
 function blog_rhythm_activate() {
-	// Reserved for later tasks (cron scheduling).
+	if ( ! wp_next_scheduled( 'blog_rhythm_send_reminders' ) ) {
+		wp_schedule_event( time(), 'hourly', 'blog_rhythm_send_reminders' );
+	}
 }
 register_activation_hook( __FILE__, 'blog_rhythm_activate' );
 
@@ -48,7 +50,7 @@ register_activation_hook( __FILE__, 'blog_rhythm_activate' );
  * Deactivation stub.
  */
 function blog_rhythm_deactivate() {
-	// Reserved for later tasks (cron cleanup).
+	wp_clear_scheduled_hook( 'blog_rhythm_send_reminders' );
 }
 register_deactivation_hook( __FILE__, 'blog_rhythm_deactivate' );
 
@@ -60,5 +62,7 @@ function blog_rhythm_init() {
 	( new BlogRhythm\Settings_Page() )->register();
 	( new BlogRhythm\Rest() )->register();
 	( new BlogRhythm\Privacy() )->register();
+	( new BlogRhythm\Reminders() )->register();
+	add_action( 'blog_rhythm_send_reminders', array( 'BlogRhythm\Reminders', 'run' ) );
 }
 add_action( 'plugins_loaded', 'blog_rhythm_init' );

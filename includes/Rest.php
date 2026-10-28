@@ -251,14 +251,13 @@ class Rest {
 	}
 
 	/**
-	 * Optional widget note. Task 7 fills this in.
+	 * Optional widget note.
 	 *
 	 * @param int                $user_id User ID.
 	 * @param \DateTimeImmutable $now     Current moment.
 	 * @return string|null
 	 */
 	private function note_for( int $user_id, \DateTimeImmutable $now ) {
-		unset( $user_id, $now );
-		return null;
+		return Reminders::note_due( $user_id, $now );
 	}
 }
