@@ -1,0 +1,120 @@
+// Settings page layout. Colors and spacing come from core --wpds-* tokens.
+
+// Let the page sit flush in wp-admin's content area.
+.blog-rhythm-settings-root {
+	margin: 0 0 0 -20px;
+
+	@media (max-width: 782px) {
+		margin-left: -10px;
+	}
+}
+
+.blog-rhythm-settings {
+	min-height: calc(100vh - var(--wp-admin--admin-bar--height, 32px));
+
+	// The admin-ui header is sticky at the very top, where wp-admin's toolbar
+	// sits. Keep it in the flow so the toolbar never covers it.
+	> :first-child {
+		position: static;
+	}
+}
+
+.blog-rhythm-loading {
+	padding: var(--wpds-dimension-padding-3xl, 32px);
+}
+
+.blog-rhythm-settings-body {
+	display: flex;
+	gap: var(--wpds-dimension-gap-3xl, 32px);
+	align-items: flex-start;
+	padding: var(--wpds-dimension-padding-2xl, 24px);
+
+	@media (max-width: 1100px) {
+		flex-direction: column;
+		align-items: stretch;
+	}
+}
+
+.blog-rhythm-settings-form {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: var(--wpds-dimension-gap-lg, 16px);
+	min-width: 0;
+	max-width: 600px;
+}
+
+.blog-rhythm-notice:empty {
+	display: none;
+}
+
+.blog-rhythm-card {
+	h2 {
+		margin: 0;
+	}
+
+	.blog-rhythm-card-lead {
+		margin: var(--wpds-dimension-gap-xs, 4px) 0 0;
+		color: var(--wpds-color-foreground-content-neutral-weak, #707070);
+	}
+}
+
+.blog-rhythm-help {
+	margin: 0;
+	color: var(--wpds-color-foreground-content-neutral-weak, #707070);
+}
+
+.blog-rhythm-target-input {
+	width: 88px;
+}
+
+.blog-rhythm-date {
+	max-width: 220px;
+}
+
+.blog-rhythm-field-error {
+	color: var(--wpds-color-foreground-content-error, #cc1818);
+}
+
+.blog-rhythm-callout {
+	margin: 0;
+	padding: var(--wpds-dimension-padding-sm, 8px) var(--wpds-dimension-padding-md, 12px);
+	border-inline-start: 3px solid var(--wpds-color-stroke-surface-brand-strong, #3858e9);
+	background: var(--wpds-color-background-surface-info-weak, #f6f7fb);
+	color: var(--wpds-color-foreground-content-neutral, #1e1e1e);
+}
+
+.blog-rhythm-danger.blog-rhythm-danger {
+	color: var(--wpds-color-foreground-interactive-error, #cc1818);
+	text-decoration: underline;
+}
+
+.blog-rhythm-preview {
+	position: sticky;
+	top: calc(var(--wp-admin--admin-bar--height, 32px) + var(--wpds-dimension-padding-2xl, 24px));
+	flex: none;
+	width: 420px;
+	max-width: 100%;
+
+	@media (max-width: 1100px) {
+		position: static;
+		width: auto;
+		max-width: 600px;
+	}
+}
+
+.blog-rhythm-preview-label {
+	margin: 0 0 var(--wpds-dimension-gap-sm, 8px);
+	color: var(--wpds-color-foreground-content-neutral-weak, #707070);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	font-weight: 600;
+}
+
+.blog-rhythm-preview-box {
+	margin: 0;
+
+	.postbox-header .hndle {
+		cursor: default;
+	}
+}
