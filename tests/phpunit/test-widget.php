@@ -41,6 +41,8 @@ class Test_Widget extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Blog Rhythm', $box['title'] );
 		$this->assertStringContainsString( esc_url( Settings_Page::url() ), $box['title'] );
 		$this->assertStringContainsString( '>Settings</a>', $box['title'] );
+		// Screen Options labels its checkbox from the plain name, no link.
+		$this->assertSame( 'Blog Rhythm', $box['args']['__widget_basename'] );
 	}
 
 	public function test_render_outputs_mount_with_escaped_settings_url() {

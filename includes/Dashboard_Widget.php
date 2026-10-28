@@ -38,21 +38,26 @@ class Dashboard_Widget {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
-		// Core prints widget titles as HTML, so the Settings link lives in the title.
-		$title = esc_html__( 'Blog Rhythm', 'blog-rhythm' ) . sprintf(
-			' <a class="blog-rhythm-settings-link" href="%1$s">%2$s</a>',
-			esc_url( Settings_Page::url() ),
-			esc_html__( 'Settings', 'blog-rhythm' )
-		);
 		wp_add_dashboard_widget(
 			self::WIDGET_ID,
-			$title,
+			esc_html__( 'Blog Rhythm', 'blog-rhythm' ),
 			array( $this, 'render' ),
 			null,
 			null,
 			'normal',
 			'default'
 		);
+
+		// Append the Settings link to the box heading only, after registering
+		// (core's pattern), so Screen Options keeps a plain checkbox label.
+		global $wp_meta_boxes;
+		if ( isset( $wp_meta_boxes['dashboard']['normal']['default'][ self::WIDGET_ID ]['title'] ) ) {
+			$wp_meta_boxes['dashboard']['normal']['default'][ self::WIDGET_ID ]['title'] .= sprintf( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Core's documented way to decorate a registered box title.
+				' <a class="blog-rhythm-settings-link" href="%1$s">%2$s</a>',
+				esc_url( Settings_Page::url() ),
+				esc_html__( 'Settings', 'blog-rhythm' )
+			);
+		}
 	}
 
 	/**
