@@ -115,6 +115,7 @@ class Activity {
 		);
 
 		$has_revisions = array();
+		$others_saved  = array();
 		$mine          = array();
 		foreach ( $revisions as $rev ) {
 			$pid = (int) $rev->post_parent;
@@ -124,6 +125,8 @@ class Activity {
 			$has_revisions[ $pid ] = true;
 			if ( (int) $rev->post_author === $user_id ) {
 				$mine[] = $rev;
+			} else {
+				$others_saved[ $pid ] = true;
 			}
 		}
 
@@ -138,7 +141,13 @@ class Activity {
 				continue;
 			}
 
-			// Draft, pending, future. A scheduled date isn't writing activity.
+			// Draft, pending, future. Saving a draft resets its dates, so once
+			// another author has saved it neither date says anything about the
+			// user: only the user's own revisions count then. A scheduled date
+			// isn't writing activity, so future posts use post_modified.
+			if ( ! empty( $others_saved[ $pid ] ) ) {
+				continue;
+			}
 			$created = 'future' === $post->post_status
 				? self::day( $post->post_modified_gmt, $post->post_modified )
 				: ( self::day( $post->post_date_gmt, $post->post_date ) ?? self::day( $post->post_modified_gmt, $post->post_modified ) );

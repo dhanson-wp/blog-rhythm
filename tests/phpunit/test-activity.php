@@ -135,7 +135,8 @@ class Test_Activity extends WP_UnitTestCase {
 		global $wpdb;
 		$wpdb->update( $wpdb->posts, array( 'post_modified' => '2026-06-01 12:00:00', 'post_modified_gmt' => '2026-06-01 16:00:00' ), array( 'ID' => $id ) );
 		clean_post_cache( $id );
-		$this->assertSame( array( '2026-05-10' => array( 'drafted' ) ), $this->range() );
+		// Another author saved it, so neither post_date nor post_modified is attributed to me.
+		$this->assertSame( array(), $this->range() );
 	}
 
 	public function test_my_revision_counts_as_drafted() {
@@ -219,5 +220,39 @@ class Test_Activity extends WP_UnitTestCase {
 			)
 		);
 		$this->assertSame( array( '2026-05-20', '2026-05-21' ), array_keys( $this->range() ) );
+	}
+
+	/**
+	 * Real flow: an editor saving my draft resets its dates, which must not count for me.
+	 *
+	 * @dataProvider data_unpublished_statuses
+	 *
+	 * @param string $status Post status.
+	 */
+	public function test_editor_save_of_my_unpublished_post_is_not_attributed( string $status ) {
+		$date = 'future' === $status ? '2099-01-01 09:00:00' : '2026-05-01 09:00:00';
+		$id   = $this->post( array( 'post_status' => $status, 'post_date' => $date, 'post_content' => 'one' ) );
+
+		wp_set_current_user( $this->other );
+		wp_update_post( array( 'ID' => $id, 'post_content' => 'two by the editor' ) );
+		wp_set_current_user( 0 );
+
+		$others = array_filter(
+			wp_get_post_revisions( $id ),
+			fn( $r ) => (int) $r->post_author === $this->other
+		);
+		$this->assertNotEmpty( $others, 'Editor save should have created a revision.' );
+
+		// Only my own (backdated) revision counts.
+		$this->revision( $id, $this->me, '2026-05-02 09:00:00' );
+		$this->assertSame( array( '2026-05-02' => array( 'drafted' ) ), Activity::for_range( $this->me, '2026-01-01', '2099-12-31' ) );
+	}
+
+	public function data_unpublished_statuses() {
+		return array(
+			'draft'   => array( 'draft' ),
+			'pending' => array( 'pending' ),
+			'future'  => array( 'future' ),
+		);
 	}
 }
