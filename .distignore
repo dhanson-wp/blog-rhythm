@@ -16,6 +16,7 @@
 .gitkeep
 *.zip
 HANDOFF.md
+TODOS.md
 bin
 docs
 reference
