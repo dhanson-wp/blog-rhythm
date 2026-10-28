@@ -19,7 +19,7 @@ Showing up can mean publishing a post, working on a draft, or jotting down an id
 What you get:
 
 * A dashboard widget with a calendar of dots, a week-by-week stack, or month blocks.
-* A pace that fits your life: every day, most days, every week, or every month.
+* A pace that fits your life: most days, every week, every month, or no target at all.
 * An "I showed up today" button for the times you wrote somewhere else.
 * A rest mode for when you need a break, with no pressure to come back.
 * Optional gentle reminders by email or as a quiet note in the widget.
@@ -60,6 +60,10 @@ Yes. Turn on rest mode on the settings page and set a date to come back, or leav
 Reminders are optional and off by default. You pick the day and time, and Blog Rhythm sends you a short email, shows a quiet note in your widget, or both. Each email has a link that turns reminders off.
 
 Email reminders need your site to be able to send email. If other emails from your site don't arrive, these won't either. Reminder times are approximate, because they run on WordPress's scheduled tasks and follow your site's time zone.
+
+= Does it work on multisite? =
+
+Yes. On a multisite network, your Blog Rhythm settings follow your account across sites, while your rhythm comes from each site's own posts.
 
 = Can I clear my history? =
 
