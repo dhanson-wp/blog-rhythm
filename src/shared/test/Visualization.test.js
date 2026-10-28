@@ -55,19 +55,47 @@ describe( 'Visualization', () => {
 
 	test( 'chooses the visual from look and pace', () => {
 		const { container, rerender } = render(
-			<Visualization look="auto" days={ {} } today="2026-10-27" settings={ settings } summary={ summary } />
+			<Visualization
+				look="auto"
+				days={ {} }
+				today="2026-10-27"
+				settings={ settings }
+				summary={ summary }
+			/>
 		);
 		expect( container.querySelector( '.blog-rhythm-dots' ) ).not.toBeNull();
 		rerender(
-			<Visualization look="auto" days={ {} } today="2026-10-27" settings={ { ...settings, pace: 'weekly' } } summary={ summary } />
+			<Visualization
+				look="auto"
+				days={ {} }
+				today="2026-10-27"
+				settings={ { ...settings, pace: 'weekly' } }
+				summary={ summary }
+			/>
 		);
-		expect( container.querySelector( '.blog-rhythm-weeks' ) ).not.toBeNull();
+		expect(
+			container.querySelector( '.blog-rhythm-weeks' )
+		).not.toBeNull();
 		rerender(
-			<Visualization look="auto" days={ {} } today="2026-10-27" settings={ { ...settings, pace: 'monthly' } } summary={ summary } />
+			<Visualization
+				look="auto"
+				days={ {} }
+				today="2026-10-27"
+				settings={ { ...settings, pace: 'monthly' } }
+				summary={ summary }
+			/>
 		);
-		expect( container.querySelector( '.blog-rhythm-months' ) ).not.toBeNull();
+		expect(
+			container.querySelector( '.blog-rhythm-months' )
+		).not.toBeNull();
 		rerender(
-			<Visualization look="dots" days={ {} } today="2026-10-27" settings={ { ...settings, pace: 'monthly' } } summary={ summary } />
+			<Visualization
+				look="dots"
+				days={ {} }
+				today="2026-10-27"
+				settings={ { ...settings, pace: 'monthly' } }
+				summary={ summary }
+			/>
 		);
 		expect( container.querySelector( '.blog-rhythm-dots' ) ).not.toBeNull();
 	} );
@@ -82,8 +110,14 @@ describe( 'Visualization', () => {
 				summary={ { ...summary, resting: true } }
 			/>
 		);
-		expect( container.querySelectorAll( '.blog-rhythm-cell.is-resting' ) ).toHaveLength( 1 );
-		expect( container.querySelector( '.is-resting' ).classList.contains( 'is-today' ) ).toBe( true );
+		expect(
+			container.querySelectorAll( '.blog-rhythm-cell.is-resting' )
+		).toHaveLength( 1 );
+		expect(
+			container
+				.querySelector( '.is-resting' )
+				.classList.contains( 'is-today' )
+		).toBe( true );
 	} );
 } );
 
@@ -91,7 +125,12 @@ describe( 'Visualization hideSummary', () => {
 	test( 'drops the hidden summary sentence but keeps the day list', () => {
 		const days = { '2026-10-27': 'published' };
 		const { rerender } = render(
-			<Visualization days={ days } today="2026-10-27" settings={ settings } summary={ summary } />
+			<Visualization
+				days={ days }
+				today="2026-10-27"
+				settings={ settings }
+				summary={ summary }
+			/>
 		);
 		expect( screen.queryByText( /days? this week/ ) ).not.toBeNull();
 		rerender(

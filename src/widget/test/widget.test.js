@@ -33,7 +33,8 @@ function payload( overrides = {} ) {
 			rest_until: null,
 			...( overrides.summary || {} ),
 		},
-		configured: overrides.configured === undefined ? true : overrides.configured,
+		configured:
+			overrides.configured === undefined ? true : overrides.configured,
 		today: '2026-10-27',
 		note: overrides.note === undefined ? null : overrides.note,
 		week_start: 1,
@@ -55,10 +56,14 @@ describe( 'Widget', () => {
 			} )
 		);
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		expect( await screen.findByText( 'Set a pace that suits you' ) ).toBeTruthy();
+		expect(
+			await screen.findByText( 'Set a pace that suits you' )
+		).toBeTruthy();
 		const link = screen.getByRole( 'link', { name: 'Choose your pace' } );
 		expect( link.getAttribute( 'href' ) ).toBe( SETTINGS_URL );
-		expect( screen.queryByRole( 'button', { name: 'I showed up today' } ) ).toBeNull();
+		expect(
+			screen.queryByRole( 'button', { name: 'I showed up today' } )
+		).toBeNull();
 	} );
 
 	test( 'a writer who saved the defaults leaves the empty state', async () => {
@@ -71,7 +76,9 @@ describe( 'Widget', () => {
 			} )
 		);
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		expect( await screen.findByRole( 'button', { name: 'I showed up today' } ) ).toBeTruthy();
+		expect(
+			await screen.findByRole( 'button', { name: 'I showed up today' } )
+		).toBeTruthy();
 		expect( screen.queryByText( 'Set a pace that suits you' ) ).toBeNull();
 	} );
 
@@ -85,26 +92,48 @@ describe( 'Widget', () => {
 		api.getRhythm.mockResolvedValue( payload() );
 		api.logToday.mockRejectedValue( new Error( 'nope' ) );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		fireEvent.click( await screen.findByRole( 'button', { name: 'I showed up today' } ) );
-		expect( await screen.findByText( "That didn't save. Try again in a moment." ) ).toBeTruthy();
+		fireEvent.click(
+			await screen.findByRole( 'button', { name: 'I showed up today' } )
+		);
+		expect(
+			await screen.findByText(
+				"That didn't save. Try again in a moment."
+			)
+		).toBeTruthy();
 		expect( screen.getByText( 'Two posts a week.' ) ).toBeTruthy();
-		expect( screen.getByRole( 'button', { name: 'I showed up today' } ) ).toBeTruthy();
+		expect(
+			screen.getByRole( 'button', { name: 'I showed up today' } )
+		).toBeTruthy();
 		expect( screen.queryByText( /couldn't load right now/ ) ).toBeNull();
 		expect( speak ).not.toHaveBeenCalledWith( 'Logged for today.' );
 	} );
 
 	test( 'a failed undo keeps the rhythm and the notice clears on success', async () => {
-		api.getRhythm.mockResolvedValue( payload( { days: { '2026-10-27': 'idea' } } ) );
-		api.undoToday.mockRejectedValueOnce( new Error( 'nope' ) ).mockResolvedValueOnce( {} );
+		api.getRhythm.mockResolvedValue(
+			payload( { days: { '2026-10-27': 'idea' } } )
+		);
+		api.undoToday
+			.mockRejectedValueOnce( new Error( 'nope' ) )
+			.mockResolvedValueOnce( {} );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		fireEvent.click( await screen.findByRole( 'button', { name: "Undo today's entry" } ) );
-		expect( await screen.findByText( "That didn't save. Try again in a moment." ) ).toBeTruthy();
+		fireEvent.click(
+			await screen.findByRole( 'button', { name: "Undo today's entry" } )
+		);
+		expect(
+			await screen.findByText(
+				"That didn't save. Try again in a moment."
+			)
+		).toBeTruthy();
 		expect( screen.getByText( 'Two posts a week.' ) ).toBeTruthy();
 
 		api.getRhythm.mockResolvedValue( payload( { days: {} } ) );
-		fireEvent.click( screen.getByRole( 'button', { name: "Undo today's entry" } ) );
+		fireEvent.click(
+			screen.getByRole( 'button', { name: "Undo today's entry" } )
+		);
 		await screen.findByRole( 'button', { name: 'I showed up today' } );
-		expect( screen.queryByText( "That didn't save. Try again in a moment." ) ).toBeNull();
+		expect(
+			screen.queryByText( "That didn't save. Try again in a moment." )
+		).toBeNull();
 	} );
 
 	test( 'renders resting copy and no log button when resting', async () => {
@@ -115,13 +144,19 @@ describe( 'Widget', () => {
 			} )
 		);
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		expect( await screen.findByText( /Resting until Nov 15\./ ) ).toBeTruthy();
-		expect( screen.queryByRole( 'button', { name: 'I showed up today' } ) ).toBeNull();
+		expect(
+			await screen.findByText( /Resting until Nov 15\./ )
+		).toBeTruthy();
+		expect(
+			screen.queryByRole( 'button', { name: 'I showed up today' } )
+		).toBeNull();
 		expect( screen.queryByText( /Your pace/ ) ).toBeNull();
 	} );
 
 	test( 'hides intention when empty and shows it otherwise', async () => {
-		api.getRhythm.mockResolvedValue( payload( { settings: { intention: '' } } ) );
+		api.getRhythm.mockResolvedValue(
+			payload( { settings: { intention: '' } } )
+		);
 		const { unmount } = render( <Widget settingsUrl={ SETTINGS_URL } /> );
 		await screen.findByText( /1 day this week\./ );
 		expect( screen.queryByText( 'Two posts a week.' ) ).toBeNull();
@@ -133,51 +168,82 @@ describe( 'Widget', () => {
 	} );
 
 	test( 'log button calls logToday then refreshes and offers undo', async () => {
-		api.getRhythm
-			.mockResolvedValueOnce( payload() )
-			.mockResolvedValueOnce( payload( { days: { '2026-10-26': 'published', '2026-10-27': 'idea' } } ) );
+		api.getRhythm.mockResolvedValueOnce( payload() ).mockResolvedValueOnce(
+			payload( {
+				days: { '2026-10-26': 'published', '2026-10-27': 'idea' },
+			} )
+		);
 		api.logToday.mockResolvedValue( payload() );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		fireEvent.click( await screen.findByRole( 'button', { name: 'I showed up today' } ) );
+		fireEvent.click(
+			await screen.findByRole( 'button', { name: 'I showed up today' } )
+		);
 		expect( api.logToday ).toHaveBeenCalledTimes( 1 );
-		const undo = await screen.findByRole( 'button', { name: "Undo today's entry" } );
+		const undo = await screen.findByRole( 'button', {
+			name: "Undo today's entry",
+		} );
 		expect( undo.textContent ).toBe( 'Undo' );
 		expect( speak ).toHaveBeenCalledWith( 'Logged for today.' );
 		expect( api.getRhythm ).toHaveBeenCalledTimes( 2 );
-		expect( screen.queryByRole( 'button', { name: 'I showed up today' } ) ).toBeNull();
+		expect(
+			screen.queryByRole( 'button', { name: 'I showed up today' } )
+		).toBeNull();
 	} );
 
 	test( 'undo calls undoToday then restores the log button', async () => {
 		api.getRhythm
-			.mockResolvedValueOnce( payload( { days: { '2026-10-27': 'idea' } } ) )
+			.mockResolvedValueOnce(
+				payload( { days: { '2026-10-27': 'idea' } } )
+			)
 			.mockResolvedValueOnce( payload( { days: {} } ) );
 		api.undoToday.mockResolvedValue( payload( { days: {} } ) );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		fireEvent.click( await screen.findByRole( 'button', { name: "Undo today's entry" } ) );
+		fireEvent.click(
+			await screen.findByRole( 'button', { name: "Undo today's entry" } )
+		);
 		expect( api.undoToday ).toHaveBeenCalledTimes( 1 );
-		expect( await screen.findByRole( 'button', { name: 'I showed up today' } ) ).toBeTruthy();
+		expect(
+			await screen.findByRole( 'button', { name: 'I showed up today' } )
+		).toBeTruthy();
 		expect( speak ).toHaveBeenCalledWith( "Removed today's entry." );
 	} );
 
 	test( 'log button is hidden when ideas do not count', async () => {
 		api.getRhythm.mockResolvedValue(
-			payload( { settings: { counts: { publish: true, draft: true, idea: false, edit: false } } } )
+			payload( {
+				settings: {
+					counts: {
+						publish: true,
+						draft: true,
+						idea: false,
+						edit: false,
+					},
+				},
+			} )
 		);
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
 		await screen.findByText( /1 day this week\./ );
-		expect( screen.queryByRole( 'button', { name: 'I showed up today' } ) ).toBeNull();
+		expect(
+			screen.queryByRole( 'button', { name: 'I showed up today' } )
+		).toBeNull();
 	} );
 
 	test( 'shows note only when API returns one', async () => {
-		api.getRhythm.mockResolvedValue( payload( { note: 'Your rhythm is here whenever you are.' } ) );
+		api.getRhythm.mockResolvedValue(
+			payload( { note: 'Your rhythm is here whenever you are.' } )
+		);
 		const { unmount } = render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		expect( await screen.findByText( 'Your rhythm is here whenever you are.' ) ).toBeTruthy();
+		expect(
+			await screen.findByText( 'Your rhythm is here whenever you are.' )
+		).toBeTruthy();
 		unmount();
 
 		api.getRhythm.mockResolvedValue( payload() );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
 		await screen.findByText( /1 day this week\./ );
-		expect( screen.queryByText( 'Your rhythm is here whenever you are.' ) ).toBeNull();
+		expect(
+			screen.queryByText( 'Your rhythm is here whenever you are.' )
+		).toBeNull();
 	} );
 
 	test( 'requests 26 weeks, and 53 for monthly pace', async () => {
@@ -189,17 +255,24 @@ describe( 'Widget', () => {
 
 		api.getRhythm.mockClear();
 		api.getRhythm.mockResolvedValue(
-			payload( { settings: { pace: 'monthly' }, summary: { pace: 'monthly', period: 'month' } } )
+			payload( {
+				settings: { pace: 'monthly' },
+				summary: { pace: 'monthly', period: 'month' },
+			} )
 		);
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		await waitFor( () => expect( api.getRhythm ).toHaveBeenCalledWith( 53 ) );
+		await waitFor( () =>
+			expect( api.getRhythm ).toHaveBeenCalledWith( 53 )
+		);
 	} );
 
 	test( 'error from API shows a quiet inline Notice, not a crash', async () => {
 		api.getRhythm.mockRejectedValue( new Error( 'nope' ) );
 		render( <Widget settingsUrl={ SETTINGS_URL } /> );
 		expect(
-			await screen.findByText( "Blog Rhythm couldn't load right now. Try again in a moment." )
+			await screen.findByText(
+				"Blog Rhythm couldn't load right now. Try again in a moment."
+			)
 		).toBeTruthy();
 	} );
 } );

@@ -29,12 +29,20 @@ function cellClass( type, extra = '' ) {
 }
 
 function Dots( { days, today, weekStart, resting } ) {
-	const { columns, monthLabels } = buildDotColumns( days, today, DOT_WEEKS, weekStart );
+	const { columns, monthLabels } = buildDotColumns(
+		days,
+		today,
+		DOT_WEEKS,
+		weekStart
+	);
 	return (
 		<div className="blog-rhythm-dots">
 			<div className="blog-rhythm-month-labels">
 				{ monthLabels.map( ( { index, label } ) => (
-					<span key={ index } style={ { insetInlineStart: index * COLUMN_STEP } }>
+					<span
+						key={ index }
+						style={ { insetInlineStart: index * COLUMN_STEP } }
+					>
 						{ label }
 					</span>
 				) ) }
@@ -44,15 +52,30 @@ function Dots( { days, today, weekStart, resting } ) {
 					<div className="blog-rhythm-col" key={ ci }>
 						{ column.map( ( cell, ri ) => {
 							if ( ! cell || cell.isFuture ) {
-								return <div key={ ri } className="blog-rhythm-cell is-blank" />;
+								return (
+									<div
+										key={ ri }
+										className="blog-rhythm-cell is-blank"
+									/>
+								);
 							}
 							const classes = [
 								cell.isToday ? 'is-today' : '',
-								resting && cell.isToday && ! cell.type ? 'is-resting' : '',
+								resting && cell.isToday && ! cell.type
+									? 'is-resting'
+									: '',
 							]
 								.filter( Boolean )
 								.join( ' ' );
-							return <div key={ ri } className={ cellClass( cell.type, classes ) } />;
+							return (
+								<div
+									key={ ri }
+									className={ cellClass(
+										cell.type,
+										classes
+									) }
+								/>
+							);
 						} ) }
 					</div>
 				) ) }
@@ -70,7 +93,10 @@ function Weeks( { days, today, target, weekStart } ) {
 					{ Array.from( { length: week.slots }, ( _, i ) => (
 						<div
 							key={ i }
-							className={ cellClass( i < week.count ? 'published' : null, 'is-round' ) }
+							className={ cellClass(
+								i < week.count ? 'published' : null,
+								'is-round'
+							) }
 						/>
 					) ) }
 					<small>{ week.label }</small>
@@ -86,7 +112,9 @@ function Months( { days, today } ) {
 		<div className="blog-rhythm-months">
 			{ months.map( ( month ) => (
 				<div className="blog-rhythm-month" key={ month.key }>
-					<div className={ `blog-rhythm-block is-${ month.shade }` } />
+					<div
+						className={ `blog-rhythm-block is-${ month.shade }` }
+					/>
 					<small>{ month.label }</small>
 				</div>
 			) ) }
@@ -115,7 +143,8 @@ function Legend( { look } ) {
 					<i className={ cellClass( type ) } />
 					{ type === 'published' && __( 'Published', 'blog-rhythm' ) }
 					{ type === 'drafted' && __( 'Drafted', 'blog-rhythm' ) }
-					{ type === 'idea' && __( 'Idea or outline', 'blog-rhythm' ) }
+					{ type === 'idea' &&
+						__( 'Idea or outline', 'blog-rhythm' ) }
 				</span>
 			) ) }
 		</div>
@@ -140,16 +169,34 @@ export default function Visualization( {
 		<div className="blog-rhythm-viz">
 			<div aria-hidden="true">
 				{ visual === 'dots' && (
-					<Dots days={ days } today={ today } weekStart={ weekStart } resting={ resting } />
+					<Dots
+						days={ days }
+						today={ today }
+						weekStart={ weekStart }
+						resting={ resting }
+					/>
 				) }
-				{ visual === 'weeks' && <Weeks days={ days } today={ today } target={ target } weekStart={ weekStart } /> }
-				{ visual === 'months' && <Months days={ days } today={ today } /> }
+				{ visual === 'weeks' && (
+					<Weeks
+						days={ days }
+						today={ today }
+						target={ target }
+						weekStart={ weekStart }
+					/>
+				) }
+				{ visual === 'months' && (
+					<Months days={ days } today={ today } />
+				) }
 			</div>
 			<Legend look={ visual } />
 			<VisuallyHidden>
-				{ ! hideSummary && <p>{ describeRhythm( summary, settings ) }</p> }
+				{ ! hideSummary && (
+					<p>{ describeRhythm( summary, settings ) }</p>
+				) }
 				{ entries.length > 0 && (
-					<ul aria-label={ __( 'Days you showed up', 'blog-rhythm' ) }>
+					<ul
+						aria-label={ __( 'Days you showed up', 'blog-rhythm' ) }
+					>
 						{ entries.map( ( entry ) => (
 							<li key={ entry.date }>{ entry.text }</li>
 						) ) }
@@ -159,4 +206,3 @@ export default function Visualization( {
 		</div>
 	);
 }
-

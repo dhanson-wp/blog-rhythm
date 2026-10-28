@@ -33,13 +33,23 @@ describe( 'Settings page accessibility (axe)', () => {
 		api.getRhythm.mockResolvedValue( {
 			settings,
 			days: { '2026-10-26': 'published', '2026-10-01': 'drafted' },
-			summary: { count: 1, target: 3, pace: 'daily', period: 'week', resting: false, rest_until: '' },
+			summary: {
+				count: 1,
+				target: 3,
+				pace: 'daily',
+				period: 'week',
+				resting: false,
+				rest_until: '',
+			},
 			today: '2026-10-27',
 			note: null,
 			week_start: 1,
 		} );
 		const { container } = render(
-			<SettingsApp timezone="America/New_York" email="writer@example.test" />
+			<SettingsApp
+				timezone="America/New_York"
+				email="writer@example.test"
+			/>
 		);
 		await screen.findByRole( 'radio', { name: 'Most days' } );
 		expect( await axe( container ) ).toHaveNoViolations();

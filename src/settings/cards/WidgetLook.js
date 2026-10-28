@@ -49,7 +49,7 @@ export default function WidgetLook( {
 							: __(
 									'The "I showed up today" button only appears when ideas and outlines count.',
 									'blog-rhythm'
-							  )
+								)
 					}
 					disabled={ ! ideasCount }
 					checked={ !! showLogButton }

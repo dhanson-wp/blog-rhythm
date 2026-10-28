@@ -107,7 +107,10 @@ export function buildDotColumns( days, today, weeks, weekStart = 0 ) {
 	} );
 	const monthLabels = [];
 	if ( changes.length === 0 || changes[ 0 ] >= 3 ) {
-		monthLabels.push( { index: 0, label: formatDate( columns[ 0 ].find( Boolean ).date, 'M' ) } );
+		monthLabels.push( {
+			index: 0,
+			label: formatDate( columns[ 0 ].find( Boolean ).date, 'M' ),
+		} );
 	}
 	changes.forEach( ( index ) => {
 		monthLabels.push( {
@@ -134,10 +137,19 @@ export function buildDotColumns( days, today, weeks, weekStart = 0 ) {
  * @param {number} weekStart First day of the week, 0 (Sunday) to 6.
  * @return {Array} Weeks.
  */
-export function buildWeekStack( days, today, target, weeks = 12, weekStart = 0 ) {
+export function buildWeekStack(
+	days,
+	today,
+	target,
+	weeks = 12,
+	weekStart = 0
+) {
 	const map = days || {};
 	const slots = Math.max( Number( target ) || 0, 2 );
-	const thisWeek = addDays( today, -( ( dayOfWeek( today ) - weekStart + 7 ) % 7 ) );
+	const thisWeek = addDays(
+		today,
+		-( ( dayOfWeek( today ) - weekStart + 7 ) % 7 )
+	);
 	const result = [];
 	for ( let w = weeks - 1; w >= 0; w-- ) {
 		const start = addDays( thisWeek, -w * 7 );
@@ -236,11 +248,11 @@ export function summaryParts( summary, settings ) {
 						formatDate( s.rest_until )
 					),
 					muted: __( 'Welcome back whenever.', 'blog-rhythm' ),
-			  }
+				}
 			: {
 					main: __( 'Resting for a while.', 'blog-rhythm' ),
 					muted: __( 'Welcome back whenever.', 'blog-rhythm' ),
-			  };
+				};
 	}
 
 	const monthly = s.period === 'month';
@@ -259,14 +271,24 @@ export function summaryParts( summary, settings ) {
 	const main = monthly
 		? sprintf(
 				/* translators: %d: number of times */
-				_n( '%d time this month.', '%d times this month.', count, 'blog-rhythm' ),
+				_n(
+					'%d time this month.',
+					'%d times this month.',
+					count,
+					'blog-rhythm'
+				),
 				count
-		  )
+			)
 		: sprintf(
 				/* translators: %d: number of days */
-				_n( '%d day this week.', '%d days this week.', count, 'blog-rhythm' ),
+				_n(
+					'%d day this week.',
+					'%d days this week.',
+					count,
+					'blog-rhythm'
+				),
 				count
-		  );
+			);
 
 	if ( pace === 'open' || target < 1 ) {
 		return { main, muted: '' };
@@ -279,12 +301,12 @@ export function summaryParts( summary, settings ) {
 					/* translators: %d: target per month */
 					__( 'Your pace: %d a month.', 'blog-rhythm' ),
 					target
-			  )
+				)
 			: sprintf(
 					/* translators: %d: target per week */
 					__( 'Your pace: %d a week.', 'blog-rhythm' ),
 					target
-			  ),
+				),
 	};
 }
 

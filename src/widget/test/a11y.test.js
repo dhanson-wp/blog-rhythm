@@ -33,7 +33,8 @@ function payload( overrides = {} ) {
 			rest_until: null,
 			...( overrides.summary || {} ),
 		},
-		configured: overrides.configured === undefined ? true : overrides.configured,
+		configured:
+			overrides.configured === undefined ? true : overrides.configured,
 		today: '2026-10-27',
 		note: overrides.note || null,
 		week_start: 1,
@@ -42,7 +43,11 @@ function payload( overrides = {} ) {
 
 const states = {
 	empty: [
-		payload( { configured: false, settings: { pace: 'daily', target: 3 }, summary: { target: 3, pace: 'daily' } } ),
+		payload( {
+			configured: false,
+			settings: { pace: 'daily', target: 3 },
+			summary: { target: 3, pace: 'daily' },
+		} ),
 		'Set a pace that suits you',
 	],
 	'normal with days': [
@@ -58,11 +63,19 @@ const states = {
 		/3 days this week\./,
 	],
 	'weeks look': [
-		payload( { settings: { look: 'weeks' }, days: { '2026-10-26': 'published' }, summary: { count: 1 } } ),
+		payload( {
+			settings: { look: 'weeks' },
+			days: { '2026-10-26': 'published' },
+			summary: { count: 1 },
+		} ),
 		/1 day this week\./,
 	],
 	'months look': [
-		payload( { settings: { look: 'months' }, days: { '2026-10-26': 'published' }, summary: { count: 1 } } ),
+		payload( {
+			settings: { look: 'months' },
+			days: { '2026-10-26': 'published' },
+			summary: { count: 1 },
+		} ),
 		/1 day this week\./,
 	],
 	resting: [
@@ -86,12 +99,17 @@ beforeEach( () => {
 } );
 
 describe( 'Widget accessibility (axe)', () => {
-	test.each( Object.keys( states ) )( 'has no violations: %s', async ( name ) => {
-		api.getRhythm.mockResolvedValue( states[ name ][ 0 ] );
-		const { container } = render( <Widget settingsUrl={ SETTINGS_URL } /> );
-		await screen.findAllByText( states[ name ][ 1 ] );
-		expect( await axe( container ) ).toHaveNoViolations();
-	} );
+	test.each( Object.keys( states ) )(
+		'has no violations: %s',
+		async ( name ) => {
+			api.getRhythm.mockResolvedValue( states[ name ][ 0 ] );
+			const { container } = render(
+				<Widget settingsUrl={ SETTINGS_URL } />
+			);
+			await screen.findAllByText( states[ name ][ 1 ] );
+			expect( await axe( container ) ).toHaveNoViolations();
+		}
+	);
 
 	test( 'has no violations: error', async () => {
 		api.getRhythm.mockRejectedValue( new Error( 'nope' ) );
@@ -110,6 +128,10 @@ describe( 'Widget accessibility (axe)', () => {
 			expect( li.textContent.trim().length ).toBeGreaterThan( 0 );
 		} );
 		// The drawn grid is decorative.
-		expect( container.querySelector( '.blog-rhythm-grid' ).closest( '[aria-hidden="true"]' ) ).not.toBeNull();
+		expect(
+			container
+				.querySelector( '.blog-rhythm-grid' )
+				.closest( '[aria-hidden="true"]' )
+		).not.toBeNull();
 	} );
 } );
