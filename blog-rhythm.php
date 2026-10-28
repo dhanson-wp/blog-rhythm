@@ -59,5 +59,6 @@ function blog_rhythm_init() {
 	( new BlogRhythm\Dashboard_Widget() )->register();
 	( new BlogRhythm\Settings_Page() )->register();
 	( new BlogRhythm\Rest() )->register();
+	( new BlogRhythm\Privacy() )->register();
 }
 add_action( 'plugins_loaded', 'blog_rhythm_init' );

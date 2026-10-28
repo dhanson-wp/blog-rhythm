@@ -99,6 +99,16 @@ class Rest {
 				'args'                => $weeks,
 			)
 		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/export',
+			array(
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_export' ),
+				'permission_callback' => array( $this, 'can_use' ),
+			)
+		);
 	}
 
 	/**
@@ -140,6 +150,17 @@ class Rest {
 	 */
 	public function get_settings() {
 		return rest_ensure_response( Settings::get( get_current_user_id() ) );
+	}
+
+	/**
+	 * GET /export.
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function get_export() {
+		$data             = Privacy::export_data( get_current_user_id() );
+		$data['activity'] = (object) $data['activity'];
+		return rest_ensure_response( $data );
 	}
 
 	/**

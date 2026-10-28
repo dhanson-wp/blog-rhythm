@@ -54,6 +54,7 @@ class Test_Rest extends WP_UnitTestCase {
 			array( 'POST', '/log' ),
 			array( 'DELETE', '/log' ),
 			array( 'POST', '/history/clear' ),
+			array( 'GET', '/export' ),
 		);
 	}
 
