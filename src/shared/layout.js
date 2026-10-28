@@ -120,26 +120,31 @@ export function buildDotColumns( days, today, weeks, weekStart = 0 ) {
 }
 
 /**
- * One stack per rolling 7-day window, oldest first, the last ending today.
+ * One stack per calendar week, oldest first, the last running from the start
+ * of this week through today. This matches the server's week-aligned
+ * `summary.count`.
  *
  * `count` is capped at `slots` so going over a target never looks different.
  * `actual` keeps the true number of days.
  *
- * @param {Object} days   Map of Y-m-d to activity type.
- * @param {string} today  Today as Y-m-d.
- * @param {number} target Target per week (0 for none).
- * @param {number} weeks  How many weeks to show.
+ * @param {Object} days      Map of Y-m-d to activity type.
+ * @param {string} today     Today as Y-m-d.
+ * @param {number} target    Target per week (0 for none).
+ * @param {number} weeks     How many weeks to show.
+ * @param {number} weekStart First day of the week, 0 (Sunday) to 6.
  * @return {Array} Weeks.
  */
-export function buildWeekStack( days, today, target, weeks = 12 ) {
+export function buildWeekStack( days, today, target, weeks = 12, weekStart = 0 ) {
 	const map = days || {};
 	const slots = Math.max( Number( target ) || 0, 2 );
+	const thisWeek = addDays( today, -( ( dayOfWeek( today ) - weekStart + 7 ) % 7 ) );
 	const result = [];
 	for ( let w = weeks - 1; w >= 0; w-- ) {
-		const end = addDays( today, -w * 7 );
+		const start = addDays( thisWeek, -w * 7 );
+		const last = w === 0 ? today : addDays( start, 6 );
 		let actual = 0;
-		for ( let d = 0; d < 7; d++ ) {
-			if ( map[ addDays( end, -d ) ] ) {
+		for ( let d = start; d <= last; d = addDays( d, 1 ) ) {
+			if ( map[ d ] ) {
 				actual++;
 			}
 		}
@@ -147,11 +152,11 @@ export function buildWeekStack( days, today, target, weeks = 12 ) {
 		if ( w === 0 ) {
 			label = __( 'Now', 'blog-rhythm' );
 		} else if ( w % 4 === 0 ) {
-			label = formatDate( addDays( end, -6 ), 'M j' );
+			label = formatDate( start, 'M j' );
 		}
 		result.push( {
-			start: addDays( end, -6 ),
-			end,
+			start,
+			end: last,
 			slots,
 			actual,
 			count: Math.min( actual, slots ),

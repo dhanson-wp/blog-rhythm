@@ -88,16 +88,36 @@ describe( 'buildDotColumns', () => {
 describe( 'buildWeekStack', () => {
 	test( 'never exceeds slot count when over target', () => {
 		const days = {};
-		// Show up all 7 days of the latest week; target is 2.
-		for ( let i = 21; i <= 27; i++ ) {
+		// Show up all 7 days of the previous Sun-Sat week; target is 2.
+		for ( let i = 18; i <= 24; i++ ) {
 			days[ `2026-10-${ i }` ] = 'drafted';
 		}
 		const weeks = buildWeekStack( days, TODAY, 2 );
 		expect( weeks ).toHaveLength( 12 );
-		const latest = weeks[ weeks.length - 1 ];
-		expect( latest.slots ).toBe( 2 );
-		expect( latest.count ).toBe( 2 );
-		expect( latest.actual ).toBe( 7 );
+		const prev = weeks[ weeks.length - 2 ];
+		expect( prev.slots ).toBe( 2 );
+		expect( prev.count ).toBe( 2 );
+		expect( prev.actual ).toBe( 7 );
+	} );
+
+	test( 'newest stack matches the calendar-week count', () => {
+		// Tuesday Oct 27: Sun/Mon/Tue this week, Fri/Sat last week.
+		const days = {
+			'2026-10-25': 'published',
+			'2026-10-26': 'drafted',
+			'2026-10-27': 'idea',
+			'2026-10-23': 'published',
+			'2026-10-24': 'published',
+		};
+		const weeks = buildWeekStack( days, TODAY, 5, 12, 0 );
+		const newest = weeks[ weeks.length - 1 ];
+		expect( newest.start ).toBe( '2026-10-25' );
+		expect( newest.count ).toBe( 3 );
+		expect( weeks[ weeks.length - 2 ].count ).toBe( 2 );
+		// Monday-first weeks: Mon/Tue this week only.
+		const monday = buildWeekStack( days, TODAY, 5, 12, 1 );
+		expect( monday[ monday.length - 1 ].count ).toBe( 2 );
+		expect( monday[ monday.length - 1 ].start ).toBe( '2026-10-26' );
 	} );
 
 	test( 'uses at least two slots', () => {

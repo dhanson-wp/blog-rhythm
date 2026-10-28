@@ -61,8 +61,8 @@ function Dots( { days, today, weekStart, resting } ) {
 	);
 }
 
-function Weeks( { days, today, target } ) {
-	const weeks = buildWeekStack( days, today, target, WEEK_COUNT );
+function Weeks( { days, today, target, weekStart } ) {
+	const weeks = buildWeekStack( days, today, target, WEEK_COUNT, weekStart );
 	return (
 		<div className="blog-rhythm-weeks">
 			{ weeks.map( ( week ) => (
@@ -100,17 +100,13 @@ function Legend( { look } ) {
 			<div className="blog-rhythm-legend" aria-hidden="true">
 				<span>
 					<i className={ cellClass( 'published', 'is-round' ) } />
-					{ __( 'A day you showed up', 'blog-rhythm' ) }
+					{ __( 'A time you showed up', 'blog-rhythm' ) }
 				</span>
 			</div>
 		);
 	}
 	if ( look === 'months' ) {
-		return (
-			<div className="blog-rhythm-legend" aria-hidden="true">
-				<span>{ __( 'Darker months had more days.', 'blog-rhythm' ) }</span>
-			</div>
-		);
+		return null;
 	}
 	return (
 		<div className="blog-rhythm-legend" aria-hidden="true">
@@ -145,7 +141,7 @@ export default function Visualization( {
 				{ visual === 'dots' && (
 					<Dots days={ days } today={ today } weekStart={ weekStart } resting={ resting } />
 				) }
-				{ visual === 'weeks' && <Weeks days={ days } today={ today } target={ target } /> }
+				{ visual === 'weeks' && <Weeks days={ days } today={ today } target={ target } weekStart={ weekStart } /> }
 				{ visual === 'months' && <Months days={ days } today={ today } /> }
 			</div>
 			<Legend look={ visual } />
