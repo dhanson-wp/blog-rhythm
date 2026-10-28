@@ -10,6 +10,7 @@
 .wp-env.json
 .phpunit.result.cache
 .distignore
+.pressshipignore
 .DS_Store
 .gitkeep
 *.zip
