@@ -34,6 +34,13 @@ class Test_Reminders extends WP_UnitTestCase {
 	 */
 	private $mail_result = true;
 
+	/**
+	 * The recorded period key at the moment wp_mail ran.
+	 *
+	 * @var string
+	 */
+	private $last_at_send = '';
+
 	public function set_up() {
 		parent::set_up();
 		update_option( 'timezone_string', 'America/New_York' );
@@ -57,6 +64,7 @@ class Test_Reminders extends WP_UnitTestCase {
 	 */
 	public function capture_mail( $short, $atts ) {
 		unset( $short );
+		$this->last_at_send = get_user_meta( $this->me, Reminders::LAST_KEY, true );
 		if ( $this->mail_result ) {
 			$this->sent[] = $atts;
 		}
@@ -92,7 +100,10 @@ class Test_Reminders extends WP_UnitTestCase {
 					),
 				),
 				$extra
-			)
+			),
+			// A quiet moment (before any reminder hour), so switching on
+			// never pre-records a test day as already sent.
+			new DateTimeImmutable( '2026-05-01 00:00:00', wp_timezone() )
 		);
 	}
 
@@ -284,8 +295,10 @@ class Test_Reminders extends WP_UnitTestCase {
 		$token = $this->token_from_url( Reminders::turn_off_url( $this->me ) );
 		add_filter( 'wp_die_handler', array( $this, 'die_handler' ) );
 
-		$_GET['user']  = (string) $this->me;
-		$_GET['token'] = $token;
+		$_GET['user']      = (string) $this->me;
+		$_GET['token']     = $token;
+		$_REQUEST['user']  = (string) $this->me;
+		$_REQUEST['token'] = $token;
 		try {
 			Reminders::handle_turn_off();
 			$this->fail( 'Expected wp_die.' );
@@ -294,14 +307,15 @@ class Test_Reminders extends WP_UnitTestCase {
 		}
 		$this->assertFalse( Settings::get( $this->me )['reminders']['enabled'] );
 
-		$_GET['token'] = 'bad';
+		$_GET['token']     = 'bad';
+		$_REQUEST['token'] = 'bad';
 		try {
 			Reminders::handle_turn_off();
 			$this->fail( 'Expected wp_die.' );
 		} catch ( WPDieException $e ) {
 			$this->assertStringContainsString( 'work anymore', $e->getMessage() );
 		}
-		unset( $_GET['user'], $_GET['token'] );
+		unset( $_GET['user'], $_GET['token'], $_REQUEST['user'], $_REQUEST['token'] );
 		remove_filter( 'wp_die_handler', array( $this, 'die_handler' ) );
 	}
 
@@ -314,6 +328,75 @@ class Test_Reminders extends WP_UnitTestCase {
 		return static function ( $message ) {
 			throw new WPDieException( is_string( $message ) ? $message : 'die' );
 		};
+	}
+
+	public function test_run_generates_a_missing_secret_before_sending() {
+		$this->enable();
+		delete_user_meta( $this->me, Settings::REMINDER_SECRET_KEY );
+		$this->assertSame( 1, Reminders::run( $this->now() ) );
+
+		$token = $this->token_from_url( Reminders::turn_off_url( $this->me ) );
+		$this->assertNotSame( '', $token );
+		$this->assertStringContainsString( 'token=' . $token, $this->sent[0]['message'] );
+		$this->assertTrue( Reminders::verify_token( $this->me, $token ) );
+	}
+
+	public function test_email_has_one_click_unsubscribe_headers() {
+		$this->enable();
+		Reminders::run( $this->now() );
+		$headers = (array) $this->sent[0]['headers'];
+		$this->assertContains( 'List-Unsubscribe: <' . Reminders::turn_off_url( $this->me ) . '>', $headers );
+		$this->assertContains( 'List-Unsubscribe-Post: List-Unsubscribe=One-Click', $headers );
+	}
+
+	public function test_period_is_claimed_before_mail_and_rolled_back_on_failure() {
+		$this->enable();
+		update_user_meta( $this->me, Reminders::LAST_KEY, '2026-05-06' );
+
+		$this->mail_result = false;
+		$this->assertSame( 0, Reminders::run( $this->now() ) );
+		$this->assertSame( '2026-05-13', $this->last_at_send, 'Claimed before wp_mail ran.' );
+		$this->assertSame( '2026-05-06', get_user_meta( $this->me, Reminders::LAST_KEY, true ) );
+
+		$this->mail_result = true;
+		$this->assertSame( 1, Reminders::run( $this->now() ) );
+		$this->assertSame( '2026-05-13', $this->last_at_send );
+		$this->assertSame( '2026-05-13', get_user_meta( $this->me, Reminders::LAST_KEY, true ) );
+	}
+
+	public function test_handler_accepts_one_click_post() {
+		$this->enable();
+		$token = $this->token_from_url( Reminders::turn_off_url( $this->me ) );
+		add_filter( 'wp_die_handler', array( $this, 'die_handler' ) );
+
+		$_SERVER['REQUEST_METHOD'] = 'POST';
+		$_REQUEST['user']          = (string) $this->me;
+		$_REQUEST['token']         = $token;
+		$_POST['List-Unsubscribe'] = 'One-Click';
+		try {
+			Reminders::handle_turn_off();
+			$this->fail( 'Expected wp_die.' );
+		} catch ( WPDieException $e ) {
+			$this->assertStringContainsString( 'Reminders are off.', $e->getMessage() );
+		}
+		unset( $_REQUEST['user'], $_REQUEST['token'], $_POST['List-Unsubscribe'] );
+		$_SERVER['REQUEST_METHOD'] = 'GET';
+		remove_filter( 'wp_die_handler', array( $this, 'die_handler' ) );
+		$this->assertFalse( Settings::get( $this->me )['reminders']['enabled'] );
+	}
+
+	public function test_admin_init_reschedules_missing_cron_event() {
+		wp_clear_scheduled_hook( Reminders::CRON_HOOK );
+		$this->assertFalse( wp_next_scheduled( Reminders::CRON_HOOK ) );
+		$this->assertSame( 10, has_action( 'admin_init', array( Reminders::class, 'ensure_scheduled' ) ) );
+		Reminders::ensure_scheduled();
+		$this->assertIsInt( wp_next_scheduled( Reminders::CRON_HOOK ) );
+		$this->assertSame( 'hourly', wp_get_schedule( Reminders::CRON_HOOK ) );
+
+		// Cheap and idempotent: an existing event is left alone.
+		$next = wp_next_scheduled( Reminders::CRON_HOOK );
+		Reminders::ensure_scheduled();
+		$this->assertSame( $next, wp_next_scheduled( Reminders::CRON_HOOK ) );
 	}
 
 	public function test_note_due_only_when_widget_note_on() {

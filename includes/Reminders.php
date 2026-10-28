@@ -30,11 +30,23 @@ class Reminders {
 	);
 
 	/**
-	 * Register the turn-off handlers.
+	 * Register the turn-off handlers (GET link and RFC 8058 one-click POST)
+	 * and the cron self-heal.
 	 */
 	public function register(): void {
 		add_action( 'admin_post_nopriv_' . self::ACTION, array( __CLASS__, 'handle_turn_off' ) );
 		add_action( 'admin_post_' . self::ACTION, array( __CLASS__, 'handle_turn_off' ) );
+		add_action( 'admin_init', array( __CLASS__, 'ensure_scheduled' ) );
+	}
+
+	/**
+	 * Schedule the hourly send if it's missing, for example on a multisite
+	 * site where the plugin was never activated directly.
+	 */
+	public static function ensure_scheduled(): void {
+		if ( ! wp_next_scheduled( self::CRON_HOOK ) ) {
+			wp_schedule_event( time(), 'hourly', self::CRON_HOOK );
+		}
 	}
 
 	/**
@@ -106,8 +118,9 @@ class Reminders {
 			if ( ! empty( $settings['reminders']['skip_if_done'] ) && Rhythm::has_shown_up( $user_id, $now ) ) {
 				continue;
 			}
-			$key = self::period_key( $settings, $now );
-			if ( get_user_meta( $user_id, self::LAST_KEY, true ) === $key ) {
+			$key      = self::period_key( $settings, $now );
+			$previous = (string) get_user_meta( $user_id, self::LAST_KEY, true );
+			if ( $previous === $key ) {
 				continue;
 			}
 			$user = get_userdata( $user_id );
@@ -115,14 +128,28 @@ class Reminders {
 				continue;
 			}
 
-			$ok = wp_mail(
+			// The turn-off link needs a secret; never send a dead one.
+			Settings::ensure_secret( $user_id );
+
+			// Claim the period first so an overlapping run can't send twice,
+			// then give it back if the mail didn't go.
+			update_user_meta( $user_id, self::LAST_KEY, $key );
+			$url = self::turn_off_url( $user_id );
+			$ok  = wp_mail(
 				$user->user_email,
 				__( 'A note from Blog Rhythm', 'blog-rhythm' ),
-				self::body( $user_id, $settings )
+				self::body( $settings, $url ),
+				array(
+					'List-Unsubscribe: <' . $url . '>',
+					'List-Unsubscribe-Post: List-Unsubscribe=One-Click',
+				)
 			);
 			if ( true === $ok ) {
-				update_user_meta( $user_id, self::LAST_KEY, $key );
 				++$sent;
+			} elseif ( '' === $previous ) {
+				delete_user_meta( $user_id, self::LAST_KEY );
+			} else {
+				update_user_meta( $user_id, self::LAST_KEY, $previous );
 			}
 		}
 
@@ -201,12 +228,13 @@ class Reminders {
 	}
 
 	/**
-	 * Handle the turn-off link (admin-post).
+	 * Handle the turn-off link (admin-post). Accepts the GET link and the
+	 * RFC 8058 one-click POST, which carries the same query string.
 	 */
 	public static function handle_turn_off(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Signed link; the HMAC token is the credential.
-		$user_id = isset( $_GET['user'] ) ? absint( wp_unslash( $_GET['user'] ) ) : 0;
-		$token   = isset( $_GET['token'] ) ? sanitize_text_field( wp_unslash( $_GET['token'] ) ) : '';
+		$user_id = isset( $_REQUEST['user'] ) ? absint( wp_unslash( $_REQUEST['user'] ) ) : 0;
+		$token   = isset( $_REQUEST['token'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['token'] ) ) : '';
 		// phpcs:enable
 
 		if ( self::turn_off( $user_id, $token ) ) {
@@ -241,13 +269,13 @@ class Reminders {
 	/**
 	 * Plain-text email body.
 	 *
-	 * @param int   $user_id  User ID.
-	 * @param array $settings Settings.
+	 * @param array  $settings Settings.
+	 * @param string $url      Turn-off URL.
 	 * @return string
 	 */
-	private static function body( int $user_id, array $settings ): string {
+	private static function body( array $settings, string $url ): string {
 		return $settings['reminders']['message'] . "\n\n"
 			. __( 'Turn off these reminders:', 'blog-rhythm' ) . "\n"
-			. self::turn_off_url( $user_id ) . "\n";
+			. $url . "\n";
 	}
 }
