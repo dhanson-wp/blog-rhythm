@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import SettingsApp from '../SettingsApp';
+import { previewData } from '../form';
 import * as api from '../../shared/api';
 
 jest.mock( '../../shared/api' );
@@ -247,5 +248,24 @@ describe( 'Settings page', () => {
 		} );
 		expect( JSON.parse( text ) ).toEqual( data );
 		click.mockRestore();
+	} );
+	test( 'unchecking ideas explains and disables the log button option', async () => {
+		await setup();
+		const reason =
+			'The "I showed up today" button only appears when ideas and outlines count.';
+		const logOption = () =>
+			screen.getByRole( 'checkbox', { name: 'Show "I showed up today"' } );
+		expect( screen.queryAllByText( reason ) ).toHaveLength( 0 );
+		const isDisabled = ( el ) =>
+			el.getAttribute( 'aria-disabled' ) === 'true' || el.disabled === true;
+		expect( isDisabled( logOption() ) ).toBe( false );
+
+		fireEvent.click( screen.getByRole( 'checkbox', { name: /Ideas and outlines/ } ) );
+		expect( screen.getAllByText( reason ) ).toHaveLength( 2 );
+		expect( isDisabled( logOption() ) ).toBe( true );
+	} );
+
+	test( 'preview never shows the empty state', () => {
+		expect( previewData( stored(), rhythm( { days: {} } ) ).configured ).toBe( true );
 	} );
 } );

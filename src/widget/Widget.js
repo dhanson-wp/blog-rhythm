@@ -3,6 +3,8 @@
  * button. Rendering lives in WidgetView, which the settings preview reuses.
  */
 import { useCallback, useEffect, useState } from '@wordpress/element';
+import { speak } from '@wordpress/a11y';
+import { __ } from '@wordpress/i18n';
 import { getRhythm, logToday, undoToday } from '../shared/api';
 import WidgetView from './WidgetView';
 import './style.scss';
@@ -21,30 +23,41 @@ async function fetchRhythm() {
 export default function Widget( { settingsUrl = '' } ) {
 	const [ data, setData ] = useState( null );
 	const [ failed, setFailed ] = useState( false );
+	const [ saveFailed, setSaveFailed ] = useState( false );
 	const [ logged, setLogged ] = useState( false );
 	const [ busy, setBusy ] = useState( false );
 
-	const refresh = useCallback( async () => {
+	const load = useCallback( async () => {
 		try {
 			setData( await fetchRhythm() );
 			setFailed( false );
-		} catch ( e ) {
+		} catch {
 			setFailed( true );
 		}
 	}, [] );
 
 	useEffect( () => {
-		refresh();
-	}, [ refresh ] );
+		load();
+	}, [ load ] );
 
-	const act = async ( request, nextLogged ) => {
+	// A failed log or undo keeps the rhythm on screen with an inline notice;
+	// the "couldn't load" message is only for the first load.
+	const act = async ( request, nextLogged, announcement ) => {
 		setBusy( true );
 		try {
 			await request();
-			setLogged( nextLogged );
-			await refresh();
-		} catch ( e ) {
-			setFailed( true );
+		} catch {
+			setSaveFailed( true );
+			setBusy( false );
+			return;
+		}
+		setSaveFailed( false );
+		setLogged( nextLogged );
+		speak( announcement );
+		try {
+			setData( await fetchRhythm() );
+		} catch {
+			// The entry saved; keep showing what we have.
 		}
 		setBusy( false );
 	};
@@ -53,11 +66,20 @@ export default function Widget( { settingsUrl = '' } ) {
 		<WidgetView
 			data={ data }
 			failed={ failed }
+			saveFailed={ saveFailed }
 			settingsUrl={ settingsUrl }
 			logged={ logged }
 			busy={ busy }
-			onLog={ () => act( logToday, true ) }
-			onUndo={ () => act( undoToday, false ) }
+			onLog={ () =>
+				act( logToday, true, __( 'Logged for today.', 'blog-rhythm' ) )
+			}
+			onUndo={ () =>
+				act(
+					undoToday,
+					false,
+					__( "Removed today's entry.", 'blog-rhythm' )
+				)
+			}
 		/>
 	);
 }

@@ -271,6 +271,7 @@ export default function SettingsApp( { timezone = '', email = '' } ) {
 						look={ form.look }
 						showSummary={ form.show_summary }
 						showLogButton={ form.show_log_button }
+						ideasCount={ !! ( form.counts && form.counts.idea ) }
 						onChange={ update }
 					/>
 					<Privacy

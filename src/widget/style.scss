@@ -22,6 +22,10 @@
 		color: var(--blog-rhythm-muted);
 	}
 
+	.blog-rhythm-save-status:not(:empty) {
+		margin: 0 0 10px;
+	}
+
 	.blog-rhythm-summary {
 		display: flex;
 		align-items: center;

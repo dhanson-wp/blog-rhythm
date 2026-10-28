@@ -26,6 +26,7 @@
 		"jest-environment-jsdom": "30.5.2"
 	},
 	"dependencies": {
+		"@wordpress/a11y": "5.0.0",
 		"@wordpress/admin-ui": "3.0.0",
 		"@wordpress/api-fetch": "8.0.0",
 		"@wordpress/date": "6.0.0",

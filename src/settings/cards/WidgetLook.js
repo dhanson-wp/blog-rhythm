@@ -6,6 +6,7 @@ export default function WidgetLook( {
 	look,
 	showSummary,
 	showLogButton,
+	ideasCount = true,
 	onChange,
 } ) {
 	return (
@@ -42,6 +43,15 @@ export default function WidgetLook( {
 				/>
 				<CheckboxControl
 					label={ __( 'Show "I showed up today"', 'blog-rhythm' ) }
+					description={
+						ideasCount
+							? undefined
+							: __(
+									'The "I showed up today" button only appears when ideas and outlines count.',
+									'blog-rhythm'
+							  )
+					}
+					disabled={ ! ideasCount }
 					checked={ !! showLogButton }
 					onCheckedChange={ ( checked ) =>
 						onChange( { show_log_button: !! checked } )

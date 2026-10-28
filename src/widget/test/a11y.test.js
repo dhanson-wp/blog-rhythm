@@ -33,6 +33,7 @@ function payload( overrides = {} ) {
 			rest_until: null,
 			...( overrides.summary || {} ),
 		},
+		configured: overrides.configured === undefined ? true : overrides.configured,
 		today: '2026-10-27',
 		note: overrides.note || null,
 		week_start: 1,
@@ -41,7 +42,7 @@ function payload( overrides = {} ) {
 
 const states = {
 	empty: [
-		payload( { settings: { pace: 'daily', target: 3 }, summary: { target: 3, pace: 'daily' } } ),
+		payload( { configured: false, settings: { pace: 'daily', target: 3 }, summary: { target: 3, pace: 'daily' } } ),
 		'Set a pace that suits you',
 	],
 	'normal with days': [

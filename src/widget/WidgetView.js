@@ -4,13 +4,22 @@
  * draw exactly the same thing.
  */
 import { __ } from '@wordpress/i18n';
-import { Button, ButtonLink, Notice, Skeleton } from '@wordpress/ui';
+import {
+	Button,
+	ButtonLink,
+	Notice,
+	Skeleton,
+	VisuallyHidden,
+} from '@wordpress/ui';
 import { summaryParts } from '../shared/layout';
 import Visualization from '../shared/Visualization';
 
 function Loading() {
 	return (
 		<div className="blog-rhythm-skeleton" aria-busy="true">
+			<VisuallyHidden>
+				{ __( 'Loading your rhythm', 'blog-rhythm' ) }
+			</VisuallyHidden>
 			<Skeleton style={ { height: 14, width: '60%' } } />
 			<Skeleton style={ { height: 90 } } />
 			<Skeleton style={ { height: 14, width: '40%' } } />
@@ -40,12 +49,12 @@ function EmptyState( { settingsUrl } ) {
 	);
 }
 
-function isDefaultSetup( data ) {
-	const { settings, days, summary } = data;
+// New writers who haven't saved settings yet and have nothing to show.
+function isNewWriter( data ) {
+	const { configured, days, summary } = data;
 	return (
-		settings.pace === 'daily' &&
-		Number( settings.target ) === 3 &&
-		! summary.resting &&
+		! configured &&
+		! ( summary && summary.resting ) &&
 		Object.keys( days || {} ).length === 0
 	);
 }
@@ -53,7 +62,8 @@ function isDefaultSetup( data ) {
 /**
  * @param {Object}     props
  * @param {?Object}    props.data        Rhythm payload, or null while loading.
- * @param {boolean}    props.failed      Whether loading failed.
+ * @param {boolean}    props.failed      Whether the first load failed.
+ * @param {boolean}    props.saveFailed  Whether the last log or undo failed.
  * @param {string}     props.settingsUrl Settings page URL for the empty state.
  * @param {boolean}    props.logged      Whether the writer just logged today.
  * @param {boolean}    props.busy        Whether a log request is running.
@@ -64,6 +74,7 @@ function isDefaultSetup( data ) {
 export default function WidgetView( {
 	data = null,
 	failed = false,
+	saveFailed = false,
 	settingsUrl = '',
 	logged = false,
 	busy = false,
@@ -85,7 +96,7 @@ export default function WidgetView( {
 		);
 	} else if ( ! data ) {
 		body = <Loading />;
-	} else if ( ! preview && isDefaultSetup( data ) ) {
+	} else if ( ! preview && isNewWriter( data ) ) {
 		body = <EmptyState settingsUrl={ settingsUrl } />;
 	} else {
 		const {
@@ -115,6 +126,18 @@ export default function WidgetView( {
 					</p>
 				) }
 				{ note && <p className="blog-rhythm-note">{ note }</p> }
+				<div className="blog-rhythm-save-status" aria-live="polite">
+					{ saveFailed && (
+						<Notice.Root intent="neutral">
+							<Notice.Description>
+								{ __(
+									"That didn't save. Try again in a moment.",
+									'blog-rhythm'
+								) }
+							</Notice.Description>
+						</Notice.Root>
+					) }
+				</div>
 				<Visualization
 					look={ settings.look }
 					days={ days }
@@ -146,6 +169,14 @@ export default function WidgetView( {
 								variant="outline"
 								disabled={ busy || preview }
 								onClick={ hasLogged ? onUndo : onLog }
+								aria-label={
+									hasLogged
+										? __(
+												"Undo today's entry",
+												'blog-rhythm'
+										  )
+										: undefined
+								}
 							>
 								{ hasLogged
 									? __( 'Undo', 'blog-rhythm' )

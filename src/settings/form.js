@@ -168,6 +168,7 @@ export function previewData( form, rhythm ) {
 
 	return {
 		settings: { ...form, target },
+		configured: true,
 		days,
 		summary: {
 			count: countThisPeriod( days, today, period, weekStart ),

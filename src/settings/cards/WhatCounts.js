@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { CheckboxControl, Stack } from '@wordpress/ui';
+import { CheckboxControl, Stack, Text } from '@wordpress/ui';
 import SettingsCard from './SettingsCard';
 
 export default function WhatCounts( { counts, onChange } ) {
@@ -47,6 +47,18 @@ export default function WhatCounts( { counts, onChange } ) {
 						}
 					/>
 				) ) }
+				{ ! counts.idea && (
+					<Text
+						render={ <p /> }
+						variant="body-sm"
+						className="blog-rhythm-help"
+					>
+						{ __(
+							'The "I showed up today" button only appears when ideas and outlines count.',
+							'blog-rhythm'
+						) }
+					</Text>
+				) }
 			</Stack>
 		</SettingsCard>
 	);
