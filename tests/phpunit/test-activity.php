@@ -303,6 +303,60 @@ class Test_Activity extends WP_UnitTestCase {
 		$this->assertSame( array( '2026-05-02' => array( 'drafted' ) ), Activity::for_range( $this->me, '2026-01-01', '2099-12-31' ) );
 	}
 
+	public function test_old_published_post_edited_in_range_is_updated() {
+		$id = $this->post( array( 'post_date' => '2024-02-01 10:00:00' ) );
+		$this->revision( $id, $this->me, '2026-05-20 09:00:00' );
+		$this->assertSame(
+			array( '2026-05-20' => array( 'updated' ) ),
+			Activity::for_range( $this->me, '2026-05-01', '2026-05-31' )
+		);
+	}
+
+	public function test_scan_never_selects_post_content_or_out_of_range_posts() {
+		$this->post( array( 'post_date' => '2020-01-01 10:00:00' ) );
+		$this->post( array( 'post_date' => '2026-05-10 10:00:00' ) );
+		$queries = array();
+		$capture = static function ( $sql ) use ( &$queries ) {
+			$queries[] = $sql;
+			return $sql;
+		};
+		add_filter( 'query', $capture );
+		$days = Activity::for_range( $this->me, '2026-05-01', '2026-05-31' );
+		remove_filter( 'query', $capture );
+
+		$this->assertSame( array( '2026-05-10' => array( 'published' ) ), $days );
+		$this->assertNotEmpty( $queries );
+		foreach ( $queries as $sql ) {
+			$this->assertStringNotContainsString( 'post_content', $sql );
+			$this->assertDoesNotMatchRegularExpression( '/SELECT\s+\*|\.\*/i', $sql );
+		}
+	}
+
+	public function test_scan_is_memoized_per_request_and_reset_by_post_changes() {
+		$this->post( array( 'post_date' => '2026-05-10 10:00:00' ) );
+		Activity::flush();
+		Activity::for_range( $this->me, '2026-05-01', '2026-05-31' );
+
+		global $wpdb;
+		$before = $wpdb->num_queries;
+		Activity::for_range( $this->me, '2026-05-01', '2026-05-31' );
+		Activity::for_range( $this->me, '2026-05-04', '2026-05-10' );
+		$this->assertSame( $before, $wpdb->num_queries, 'A covered range reuses the scan.' );
+
+		// Saving a post resets the memo, so new activity shows up.
+		$this->post( array( 'post_date' => '2026-05-12 10:00:00' ) );
+		$this->assertSame(
+			array( '2026-05-10', '2026-05-12' ),
+			array_keys( Activity::for_range( $this->me, '2026-05-01', '2026-05-31' ) )
+		);
+	}
+
+	public function test_memo_is_keyed_by_user() {
+		$this->post( array( 'post_date' => '2026-05-10 10:00:00' ) );
+		Activity::for_range( $this->me, '2026-05-01', '2026-05-31' );
+		$this->assertSame( array(), Activity::for_range( $this->other, '2026-05-01', '2026-05-31' ) );
+	}
+
 	public function data_unpublished_statuses() {
 		return array(
 			'draft'   => array( 'draft' ),

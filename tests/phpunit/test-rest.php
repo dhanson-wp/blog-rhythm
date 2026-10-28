@@ -144,6 +144,39 @@ class Test_Rest extends WP_UnitTestCase {
 		$this->assertSame( '{}', wp_json_encode( $data['days'] ) );
 	}
 
+	public function test_rhythm_request_scans_posts_once() {
+		Settings::update(
+			$this->user_id,
+			array(
+				'reminders' => array(
+					'enabled'     => true,
+					'day'         => 'daily',
+					'hour'        => 0,
+					'widget_note' => true,
+				),
+			)
+		);
+		self::factory()->post->create(
+			array(
+				'post_author' => $this->user_id,
+				'post_status' => 'publish',
+				'post_date'   => Log::today() . ' 00:30:00',
+			)
+		);
+		\BlogRhythm\Activity::flush();
+		$scans   = 0;
+		$capture = static function ( $sql ) use ( &$scans ) {
+			if ( false !== strpos( $sql, "post_type = 'post' AND post_author" ) ) {
+				++$scans;
+			}
+			return $sql;
+		};
+		add_filter( 'query', $capture );
+		$this->request( 'GET', '/rhythm' );
+		remove_filter( 'query', $capture );
+		$this->assertSame( 1, $scans );
+	}
+
 	public function test_log_post_then_delete_roundtrip() {
 		$today = Log::today();
 

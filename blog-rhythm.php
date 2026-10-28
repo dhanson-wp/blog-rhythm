@@ -64,5 +64,7 @@ function blog_rhythm_init() {
 	( new BlogRhythm\Privacy() )->register();
 	( new BlogRhythm\Reminders() )->register();
 	add_action( 'blog_rhythm_send_reminders', array( 'BlogRhythm\Reminders', 'run' ) );
+	// Any post write can change activity, so drop this request's memoized scan.
+	add_action( 'clean_post_cache', array( 'BlogRhythm\Activity', 'flush' ), 10, 0 );
 }
 add_action( 'plugins_loaded', 'blog_rhythm_init' );
