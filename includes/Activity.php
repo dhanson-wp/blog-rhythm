@@ -130,10 +130,10 @@ class Activity {
 			return $days;
 		}
 
-		$statuses = "'" . implode( "','", self::STATUSES ) . "'";
+		$statuses = implode( ',', array_fill( 0, count( self::STATUSES ), '%s' ) );
 		$columns  = self::COLUMNS;
 
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Lean, range-bounded scan of a few columns (no post bodies); memoized per request above. Interpolated parts are class constants and $wpdb->posts.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Lean, range-bounded scan of a few columns (no post bodies); memoized per request above. Interpolated parts are class constants, $wpdb->posts and a placeholder list built to match the statuses; arguments are passed as one array.
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT {$columns} FROM {$wpdb->posts}
@@ -141,15 +141,7 @@ class Activity {
 				AND ( ( post_date_gmt BETWEEN %s AND %s ) OR ( post_date BETWEEN %s AND %s )
 					OR ( post_modified_gmt BETWEEN %s AND %s ) OR ( post_modified BETWEEN %s AND %s ) )
 				ORDER BY ID ASC",
-				$user_id,
-				$lo,
-				$hi,
-				$lo,
-				$hi,
-				$lo,
-				$hi,
-				$lo,
-				$hi
+				array_merge( array( $user_id ), self::STATUSES, array( $lo, $hi, $lo, $hi, $lo, $hi, $lo, $hi ) )
 			)
 		);
 
@@ -265,7 +257,7 @@ class Activity {
 		if ( ! $ids ) {
 			return array();
 		}
-		$statuses     = "'" . implode( "','", self::STATUSES ) . "'";
+		$statuses     = implode( ',', array_fill( 0, count( self::STATUSES ), '%s' ) );
 		$columns      = self::COLUMNS;
 		$placeholders = implode( ',', array_fill( 0, count( $ids ), '%d' ) );
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Lean lookup by ID; placeholders are built to match the IDs, memoized per request.
@@ -273,7 +265,7 @@ class Activity {
 			$wpdb->prepare(
 				"SELECT {$columns} FROM {$wpdb->posts}
 				WHERE post_type = 'post' AND post_author = %d AND post_status IN ( {$statuses} ) AND ID IN ( {$placeholders} )",
-				array_merge( array( $user_id ), $ids )
+				array_merge( array( $user_id ), self::STATUSES, $ids )
 			)
 		);
 		// phpcs:enable
