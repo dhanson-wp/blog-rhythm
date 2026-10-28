@@ -7,6 +7,7 @@
 .impeccable
 .claude
 .wp-env.json
+.wp-env.override.json
 .phpunit.result.cache
 .distignore
 .pressshipignore
@@ -14,6 +15,7 @@
 .gitkeep
 *.zip
 HANDOFF.md
+TODOS.md
 bin
 docs
 reference
@@ -27,5 +29,6 @@ package.json
 package-lock.json
 webpack.config.js
 jest.config.js
+eslint.config.cjs
 phpcs.xml.dist
 phpunit.xml.dist

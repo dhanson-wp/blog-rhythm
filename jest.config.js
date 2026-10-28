@@ -1,7 +1,7 @@
 /**
  * Jest config. wp-scripts 37 no longer supplies WordPress defaults for Jest,
  * so this is the minimum: Babel via the WordPress preset, jsdom, stylesheet
- * stubs, and transforming the ESM-only @wordpress/* packages.
+ * stubs, and transforming the ESM-only `@wordpress/*` packages.
  */
 module.exports = {
 	testEnvironment: 'jsdom',
@@ -14,7 +14,9 @@ module.exports = {
 			{ presets: [ '@wordpress/babel-preset-default' ] },
 		],
 	},
-	transformIgnorePatterns: [ '/node_modules/(?!(@wordpress|@base-ui|@floating-ui|uuid)/)' ],
+	transformIgnorePatterns: [
+		'/node_modules/(?!(@wordpress|@base-ui|@floating-ui|uuid)/)',
+	],
 	moduleFileExtensions: [ 'js', 'mjs', 'json', 'jsx' ],
 	moduleNameMapper: {
 		'\\.(css|scss)$': '<rootDir>/tests/js/style-mock.js',

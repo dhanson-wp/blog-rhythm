@@ -13,7 +13,11 @@ export function getSettings() {
 }
 
 export function saveSettings( settings ) {
-	return apiFetch( { path: `${ NS }/settings`, method: 'POST', data: settings } );
+	return apiFetch( {
+		path: `${ NS }/settings`,
+		method: 'POST',
+		data: settings,
+	} );
 }
 
 export function logToday() {

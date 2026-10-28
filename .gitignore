@@ -7,3 +7,4 @@ vendor/
 build/
 .phpunit.result.cache
 *.zip
+.wp-env.override.json

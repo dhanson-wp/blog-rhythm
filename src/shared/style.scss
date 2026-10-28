@@ -170,10 +170,12 @@
 			background: CanvasText;
 		}
 
-		// Drafted: ring.
+		// Drafted: ring. The normal-mode inset shadow is more specific than
+		// the reset above, so clear it here or it paints the brand color.
 		.blog-rhythm-cell.is-drafted {
-			border: 3px solid CanvasText;
+			border: 2px solid CanvasText;
 			background: Canvas;
+			box-shadow: none;
 		}
 
 		// Idea: small centered dot.

@@ -19,7 +19,11 @@ describe( 'buildDotColumns', () => {
 
 		// 4 weeks = 28 days ending today; 2026-09-30 is a Wednesday, so with
 		// a Sunday start the first column is padded with 3 empty slots.
-		expect( cols.columns[ 0 ].slice( 0, 3 ) ).toEqual( [ null, null, null ] );
+		expect( cols.columns[ 0 ].slice( 0, 3 ) ).toEqual( [
+			null,
+			null,
+			null,
+		] );
 		expect( cols.columns[ 0 ][ 3 ].date ).toBe( '2026-09-30' );
 
 		const todays = flat.filter( ( c ) => c && c.isToday );
@@ -80,8 +84,12 @@ describe( 'buildDotColumns', () => {
 		expect( real.every( ( c ) => c.type === null ) ).toBe( true );
 		expect( () => buildWeekStack( {}, TODAY, 3 ) ).not.toThrow();
 		expect( () => buildMonthBlocks( {}, TODAY ) ).not.toThrow();
-		expect( buildMonthBlocks( {}, TODAY ).every( ( m ) => m.shade === 'none' ) ).toBe( true );
-		expect( buildWeekStack( {}, TODAY, 3 ).every( ( w ) => w.count === 0 ) ).toBe( true );
+		expect(
+			buildMonthBlocks( {}, TODAY ).every( ( m ) => m.shade === 'none' )
+		).toBe( true );
+		expect(
+			buildWeekStack( {}, TODAY, 3 ).every( ( w ) => w.count === 0 )
+		).toBe( true );
 	} );
 } );
 
@@ -132,7 +140,8 @@ describe( 'buildMonthBlocks', () => {
 		const days = {};
 		const put = ( month, n ) => {
 			for ( let d = 1; d <= n; d++ ) {
-				days[ `2026-${ month }-${ String( d ).padStart( 2, '0' ) }` ] = 'idea';
+				days[ `2026-${ month }-${ String( d ).padStart( 2, '0' ) }` ] =
+					'idea';
 			}
 		};
 		put( '10', 9 ); // strong
@@ -167,13 +176,27 @@ describe( 'describeRhythm', () => {
 	test( 'reads as a plain sentence', () => {
 		expect(
 			describeRhythm(
-				{ count: 3, target: 3, pace: 'weekly', period: 'week', resting: false, rest_until: null },
+				{
+					count: 3,
+					target: 3,
+					pace: 'weekly',
+					period: 'week',
+					resting: false,
+					rest_until: null,
+				},
 				settings
 			)
 		).toBe( '3 days this week. Your pace: 3 a week.' );
 		expect(
 			describeRhythm(
-				{ count: 1, target: 3, pace: 'weekly', period: 'week', resting: false, rest_until: null },
+				{
+					count: 1,
+					target: 3,
+					pace: 'weekly',
+					period: 'week',
+					resting: false,
+					rest_until: null,
+				},
 				settings
 			)
 		).toBe( '1 day this week. Your pace: 3 a week.' );
@@ -181,13 +204,48 @@ describe( 'describeRhythm', () => {
 
 	test( 'never contains missed, behind, streak', () => {
 		const variants = [
-			[ { count: 0, target: 3, pace: 'weekly', period: 'week' }, settings ],
-			[ { count: 9, target: 3, pace: 'weekly', period: 'week' }, settings ],
-			[ { count: 0, target: 0, pace: 'open', period: 'week' }, { pace: 'open', target: 0 } ],
-			[ { count: 0, target: 4, pace: 'monthly', period: 'month' }, { pace: 'monthly', target: 4 } ],
-			[ { count: 2, target: 4, pace: 'monthly', period: 'month' }, { pace: 'monthly', target: 4 } ],
-			[ { count: 0, target: 3, pace: 'daily', period: 'week', resting: true, rest_until: '2026-11-15' }, settings ],
-			[ { count: 0, target: 3, pace: 'daily', period: 'week', resting: true, rest_until: null }, settings ],
+			[
+				{ count: 0, target: 3, pace: 'weekly', period: 'week' },
+				settings,
+			],
+			[
+				{ count: 9, target: 3, pace: 'weekly', period: 'week' },
+				settings,
+			],
+			[
+				{ count: 0, target: 0, pace: 'open', period: 'week' },
+				{ pace: 'open', target: 0 },
+			],
+			[
+				{ count: 0, target: 4, pace: 'monthly', period: 'month' },
+				{ pace: 'monthly', target: 4 },
+			],
+			[
+				{ count: 2, target: 4, pace: 'monthly', period: 'month' },
+				{ pace: 'monthly', target: 4 },
+			],
+			[
+				{
+					count: 0,
+					target: 3,
+					pace: 'daily',
+					period: 'week',
+					resting: true,
+					rest_until: '2026-11-15',
+				},
+				settings,
+			],
+			[
+				{
+					count: 0,
+					target: 3,
+					pace: 'daily',
+					period: 'week',
+					resting: true,
+					rest_until: null,
+				},
+				settings,
+			],
 		];
 		variants.forEach( ( [ summary, s ] ) => {
 			const text = describeRhythm( summary, s );
@@ -199,7 +257,10 @@ describe( 'describeRhythm', () => {
 
 	test( 'quiet week variant', () => {
 		expect(
-			describeRhythm( { count: 0, target: 3, pace: 'weekly', period: 'week' }, settings )
+			describeRhythm(
+				{ count: 0, target: 3, pace: 'weekly', period: 'week' },
+				settings
+			)
 		).toBe( "A quiet week so far. That's part of it." );
 	} );
 
@@ -224,13 +285,27 @@ describe( 'describeRhythm', () => {
 	test( 'resting variant', () => {
 		expect(
 			describeRhythm(
-				{ count: 0, target: 3, pace: 'daily', period: 'week', resting: true, rest_until: '2026-11-15' },
+				{
+					count: 0,
+					target: 3,
+					pace: 'daily',
+					period: 'week',
+					resting: true,
+					rest_until: '2026-11-15',
+				},
 				settings
 			)
 		).toBe( 'Resting until Nov 15. Welcome back whenever.' );
 		expect(
 			describeRhythm(
-				{ count: 0, target: 3, pace: 'daily', period: 'week', resting: true, rest_until: null },
+				{
+					count: 0,
+					target: 3,
+					pace: 'daily',
+					period: 'week',
+					resting: true,
+					rest_until: null,
+				},
 				settings
 			)
 		).toBe( 'Resting for a while. Welcome back whenever.' );

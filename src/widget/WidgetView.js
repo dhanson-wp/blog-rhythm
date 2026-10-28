@@ -174,7 +174,7 @@ export default function WidgetView( {
 										? __(
 												"Undo today's entry",
 												'blog-rhythm'
-										  )
+											)
 										: undefined
 								}
 							>
