@@ -76,7 +76,13 @@ Deleting the plugin removes your settings, your log, and the reminder schedule. 
 == Changelog ==
 
 = 1.0.0 =
-* First release.
+* See your own writing rhythm on the dashboard: a calendar of dots, a week-by-week stack, or month blocks, matched to the pace you choose.
+* Set a pace that suits you (most days, every week, every month, or no target at all) and change it any time without losing anything.
+* Choose what counts as showing up: publishing, working on a draft, ideas and outlines you log yourself, and, if you like, updating an older post.
+* Log an idea or outline with "I showed up today", and undo it the same day.
+* Rest for a while, with an optional return date. Targets and reminders step aside, and past days stay as they were.
+* Turn on gentle email reminders, or a quiet note in the widget, on the days and time you pick. Every email has a one-click way to turn them off.
+* Export your data as JSON, or clear your history, from the settings page. WordPress's personal data export and erase tools work too.
 
 == Upgrade Notice ==
 
