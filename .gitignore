@@ -5,3 +5,4 @@ node_modules/
 reference/
 vendor/
 build/
+.phpunit.result.cache

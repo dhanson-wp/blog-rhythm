@@ -1,0 +1,62 @@
+<?php
+/**
+ * Plugin Name:       Blog Rhythm
+ * Description:       A private, per-writer dashboard widget that shows your own writing rhythm.
+ * Version:           0.1.0
+ * Requires at least: 7.1
+ * Requires PHP:      7.4
+ * Author:            Derek Hanson
+ * License:           GPLv2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       blog-rhythm
+ *
+ * @package BlogRhythm
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'BLOG_RHYTHM_VERSION', '0.1.0' );
+define( 'BLOG_RHYTHM_FILE', __FILE__ );
+define( 'BLOG_RHYTHM_DIR', plugin_dir_path( __FILE__ ) );
+define( 'BLOG_RHYTHM_URL', plugin_dir_url( __FILE__ ) );
+
+spl_autoload_register(
+	static function ( $class_name ) {
+		$prefix = 'BlogRhythm\\';
+		if ( 0 !== strpos( $class_name, $prefix ) ) {
+			return;
+		}
+		$relative = substr( $class_name, strlen( $prefix ) );
+		$file     = BLOG_RHYTHM_DIR . 'includes/' . str_replace( '\\', '/', $relative ) . '.php';
+		if ( is_readable( $file ) ) {
+			require_once $file;
+		}
+	}
+);
+
+/**
+ * Activation stub.
+ */
+function blog_rhythm_activate() {
+	// Reserved for later tasks (cron scheduling).
+}
+register_activation_hook( __FILE__, 'blog_rhythm_activate' );
+
+/**
+ * Deactivation stub.
+ */
+function blog_rhythm_deactivate() {
+	// Reserved for later tasks (cron cleanup).
+}
+register_deactivation_hook( __FILE__, 'blog_rhythm_deactivate' );
+
+/**
+ * Wire up hooks.
+ */
+function blog_rhythm_init() {
+	( new BlogRhythm\Dashboard_Widget() )->register();
+	( new BlogRhythm\Settings_Page() )->register();
+}
+add_action( 'plugins_loaded', 'blog_rhythm_init' );
