@@ -58,5 +58,6 @@ register_deactivation_hook( __FILE__, 'blog_rhythm_deactivate' );
 function blog_rhythm_init() {
 	( new BlogRhythm\Dashboard_Widget() )->register();
 	( new BlogRhythm\Settings_Page() )->register();
+	( new BlogRhythm\Rest() )->register();
 }
 add_action( 'plugins_loaded', 'blog_rhythm_init' );
