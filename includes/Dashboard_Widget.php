@@ -1,6 +1,6 @@
 <?php
 /**
- * Dashboard widget (spike stub).
+ * Dashboard widget.
  *
  * @package BlogRhythm
  */
@@ -16,6 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Dashboard_Widget {
 
+	const WIDGET_ID = 'blog_rhythm_widget';
+
+	/**
+	 * Handle for the stylesheet shared by the widget and the settings page.
+	 */
+	const STYLE_HANDLE = 'blog_rhythm_style';
+
 	/**
 	 * Hook registration.
 	 */
@@ -25,16 +32,26 @@ class Dashboard_Widget {
 	}
 
 	/**
-	 * Add the widget.
+	 * Add the widget for people who can write posts.
 	 */
 	public function add_widget() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return;
 		}
+		// Core prints widget titles as HTML, so the Settings link lives in the title.
+		$title = esc_html__( 'Blog Rhythm', 'blog-rhythm' ) . sprintf(
+			' <a class="blog-rhythm-settings-link" href="%1$s">%2$s</a>',
+			esc_url( Settings_Page::url() ),
+			esc_html__( 'Settings', 'blog-rhythm' )
+		);
 		wp_add_dashboard_widget(
-			'blog_rhythm_widget',
-			esc_html__( 'Blog rhythm', 'blog-rhythm' ),
-			array( $this, 'render' )
+			self::WIDGET_ID,
+			$title,
+			array( $this, 'render' ),
+			null,
+			null,
+			'normal',
+			'default'
 		);
 	}
 
@@ -42,7 +59,29 @@ class Dashboard_Widget {
 	 * Render the mount point.
 	 */
 	public function render() {
-		echo '<div id="blog-rhythm-widget-root"></div>';
+		printf(
+			'<div id="blog-rhythm-widget-root" data-settings-url="%s"></div>',
+			esc_url( Settings_Page::url() )
+		);
+	}
+
+	/**
+	 * Enqueue the shared stylesheet (with its token dependency).
+	 */
+	public static function enqueue_style() {
+		$css_file = BLOG_RHYTHM_DIR . 'build/style-widget.css';
+		if ( ! is_readable( $css_file ) ) {
+			return;
+		}
+		// Design tokens come from core; the bundle ships no token CSS.
+		$deps = wp_style_is( 'wp-theme', 'registered' ) ? array( 'wp-theme' ) : array();
+		wp_enqueue_style(
+			self::STYLE_HANDLE,
+			BLOG_RHYTHM_URL . 'build/style-widget.css',
+			$deps,
+			(string) filemtime( $css_file )
+		);
+		wp_style_add_data( self::STYLE_HANDLE, 'rtl', 'replace' );
 	}
 
 	/**
@@ -60,15 +99,13 @@ class Dashboard_Widget {
 		}
 		$asset = include $asset_file;
 		wp_enqueue_script(
-			'blog_rhythm_widget',
+			self::WIDGET_ID,
 			BLOG_RHYTHM_URL . 'build/widget.js',
 			$asset['dependencies'],
 			$asset['version'],
 			true
 		);
-		// Design tokens come from core; the bundle ships no token CSS.
-		if ( wp_style_is( 'wp-theme', 'registered' ) ) {
-			wp_enqueue_style( 'wp-theme' );
-		}
+		wp_set_script_translations( self::WIDGET_ID, 'blog-rhythm', BLOG_RHYTHM_DIR . 'languages' );
+		self::enqueue_style();
 	}
 }

@@ -129,6 +129,7 @@ export default function Visualization( {
 	settings = {},
 	summary = {},
 	weekStart = 0,
+	hideSummary = false,
 } ) {
 	const visual = resolveLook( look, settings.pace );
 	const entries = listActiveDays( days );
@@ -146,7 +147,7 @@ export default function Visualization( {
 			</div>
 			<Legend look={ visual } />
 			<VisuallyHidden>
-				<p>{ describeRhythm( summary, settings ) }</p>
+				{ ! hideSummary && <p>{ describeRhythm( summary, settings ) }</p> }
 				{ entries.length > 0 && (
 					<ul aria-label={ __( 'Days you showed up', 'blog-rhythm' ) }>
 						{ entries.map( ( entry ) => (

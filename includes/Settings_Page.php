@@ -19,6 +19,15 @@ class Settings_Page {
 	const SLUG = 'blog-rhythm';
 
 	/**
+	 * URL of the settings page (its final location under Posts).
+	 *
+	 * @return string
+	 */
+	public static function url(): string {
+		return admin_url( 'edit.php?page=' . self::SLUG );
+	}
+
+	/**
 	 * Hook registration.
 	 */
 	public function register() {

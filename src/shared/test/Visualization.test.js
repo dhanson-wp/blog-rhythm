@@ -86,3 +86,24 @@ describe( 'Visualization', () => {
 		expect( container.querySelector( '.is-resting' ).classList.contains( 'is-today' ) ).toBe( true );
 	} );
 } );
+
+describe( 'Visualization hideSummary', () => {
+	test( 'drops the hidden summary sentence but keeps the day list', () => {
+		const days = { '2026-10-27': 'published' };
+		const { rerender } = render(
+			<Visualization days={ days } today="2026-10-27" settings={ settings } summary={ summary } />
+		);
+		expect( screen.queryByText( /days? this week/ ) ).not.toBeNull();
+		rerender(
+			<Visualization
+				hideSummary
+				days={ days }
+				today="2026-10-27"
+				settings={ settings }
+				summary={ summary }
+			/>
+		);
+		expect( screen.queryByText( /days? this week/ ) ).toBeNull();
+		expect( screen.getAllByRole( 'listitem' ) ).toHaveLength( 1 );
+	} );
+} );
