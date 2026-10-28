@@ -7,15 +7,23 @@
 	"scripts": {
 		"build": "wp-scripts build",
 		"start": "wp-scripts start",
-		"test:js": "wp-scripts test-unit-js",
+		"test:js": "wp-scripts test-unit-jest",
 		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/blog-rhythm vendor/bin/phpunit"
 	},
 	"devDependencies": {
+		"@testing-library/dom": "10.4.2",
+		"@testing-library/react": "16.3.3",
 		"@wordpress/env": "12.0.0",
-		"@wordpress/scripts": "37.0.0"
+		"@wordpress/scripts": "37.0.0",
+		"jest": "30.5.2",
+		"jest-environment-jsdom": "30.5.2"
 	},
 	"dependencies": {
 		"@wordpress/admin-ui": "3.0.0",
+		"@wordpress/api-fetch": "8.0.0",
+		"@wordpress/date": "6.0.0",
+		"@wordpress/element": "10.0.0",
+		"@wordpress/i18n": "7.0.0",
 		"@wordpress/ui": "0.25.0"
 	}
 }

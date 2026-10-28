@@ -242,11 +242,12 @@ class Rest {
 		$days = Rhythm::counted_days( Activity::for_range( $user_id, $from, $today ), $settings['counts'] );
 
 		return array(
-			'settings' => $settings,
-			'days'     => (object) $days,
-			'summary'  => Rhythm::summary( $user_id, $now ),
-			'today'    => $today,
-			'note'     => $this->note_for( $user_id, $now ),
+			'settings'   => $settings,
+			'days'       => (object) $days,
+			'summary'    => Rhythm::summary( $user_id, $now ),
+			'today'      => $today,
+			'week_start' => (int) get_option( 'start_of_week' ),
+			'note'       => $this->note_for( $user_id, $now ),
 		);
 	}
 

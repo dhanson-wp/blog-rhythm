@@ -130,6 +130,9 @@ class Test_Rest extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'summary', $data );
 		$this->assertArrayHasKey( 'note', $data );
 		$this->assertNull( $data['note'] );
+		$this->assertSame( (int) get_option( 'start_of_week' ), $data['week_start'] );
+		update_option( 'start_of_week', 1 );
+		$this->assertSame( 1, $this->request( 'GET', '/rhythm' )->get_data()['week_start'] );
 	}
 
 	public function test_rhythm_for_new_user_is_empty_not_error() {
