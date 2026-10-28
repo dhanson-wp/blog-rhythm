@@ -149,7 +149,7 @@ class Rest {
 	 * @return \WP_REST_Response
 	 */
 	public function get_settings() {
-		return rest_ensure_response( Settings::get( get_current_user_id() ) );
+		return rest_ensure_response( Settings::settle_rest( Settings::get( get_current_user_id() ), current_datetime() ) );
 	}
 
 	/**
@@ -178,7 +178,8 @@ class Rest {
 				array( 'status' => 400 )
 			);
 		}
-		return rest_ensure_response( Settings::update( get_current_user_id(), $body ) );
+		$now = current_datetime();
+		return rest_ensure_response( Settings::settle_rest( Settings::update( get_current_user_id(), $body, $now ), $now ) );
 	}
 
 	/**
@@ -242,7 +243,9 @@ class Rest {
 		$days = Rhythm::counted_days( Activity::for_range( $user_id, $from, $today ), $settings['counts'] );
 
 		return array(
-			'settings'   => $settings,
+			'settings'   => Settings::settle_rest( $settings, $now ),
+			// False until the writer saves settings once, even unchanged.
+			'configured' => metadata_exists( 'user', $user_id, Settings::META_KEY ),
 			'days'       => (object) $days,
 			'summary'    => Rhythm::summary( $user_id, $now ),
 			'today'      => $today,

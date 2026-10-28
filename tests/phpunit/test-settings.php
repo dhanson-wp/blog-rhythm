@@ -215,4 +215,116 @@ class Test_Settings extends WP_UnitTestCase {
 		$settings['rest_until'] = '2026-05-11';
 		$this->assertTrue( Settings::is_resting( $settings, $now ) );
 	}
+	public function test_backslashes_survive_a_round_trip() {
+		$user = self::factory()->user->create( array( 'role' => 'author' ) );
+		Settings::update(
+			$user,
+			array(
+				'intention' => '\o/ write',
+				'reminders' => array( 'message' => 'Hi \o/' ),
+			)
+		);
+		$got = Settings::get( $user );
+		$this->assertSame( '\o/ write', $got['intention'] );
+		$this->assertSame( 'Hi \o/', $got['reminders']['message'] );
+	}
+
+	public function test_booleans_accept_only_clear_values() {
+		$base = Settings::defaults();
+		foreach ( array( true, 1, '1', 'true' ) as $yes ) {
+			$this->assertTrue( Settings::sanitize( array( 'counts' => array( 'edit' => $yes ) ) )['counts']['edit'], var_export( $yes, true ) );
+		}
+		foreach ( array( false, 0, '0', 'false' ) as $no ) {
+			$this->assertFalse( Settings::sanitize( array( 'counts' => array( 'publish' => $no ) ) )['counts']['publish'], var_export( $no, true ) );
+		}
+		foreach ( array( 'no', 'off', 'abc', 2, 'yes', 'on', '' ) as $junk ) {
+			$out = Settings::sanitize(
+				array(
+					'counts'       => array(
+						'edit'    => $junk,
+						'publish' => $junk,
+					),
+					'show_summary' => $junk,
+					'reminders'    => array( 'enabled' => $junk ),
+				)
+			);
+			$this->assertSame( $base['counts']['edit'], $out['counts']['edit'], var_export( $junk, true ) );
+			$this->assertSame( $base['counts']['publish'], $out['counts']['publish'], var_export( $junk, true ) );
+			$this->assertSame( $base['show_summary'], $out['show_summary'], var_export( $junk, true ) );
+			$this->assertFalse( $out['reminders']['enabled'], var_export( $junk, true ) );
+		}
+	}
+
+	public function test_no_does_not_enable_reminders_and_keeps_stored_value() {
+		$user = self::factory()->user->create( array( 'role' => 'author' ) );
+		Settings::update( $user, array( 'reminders' => array( 'enabled' => 'no' ) ) );
+		$this->assertFalse( Settings::get( $user )['reminders']['enabled'] );
+		$this->assertSame( '', get_user_meta( $user, 'blog_rhythm_reminders_on', true ) );
+
+		Settings::update( $user, array( 'reminders' => array( 'enabled' => true ) ) );
+		Settings::update( $user, array( 'reminders' => array( 'enabled' => 'off' ) ) );
+		$this->assertTrue( Settings::get( $user )['reminders']['enabled'] );
+	}
+
+	public function test_update_generates_missing_secret_while_reminders_on() {
+		$user = self::factory()->user->create( array( 'role' => 'author' ) );
+		Settings::update( $user, array( 'reminders' => array( 'enabled' => true ) ) );
+		delete_user_meta( $user, Settings::REMINDER_SECRET_KEY );
+
+		Settings::update( $user, array( 'reminders' => array( 'hour' => 8 ) ) );
+		$this->assertSame( 32, strlen( get_user_meta( $user, Settings::REMINDER_SECRET_KEY, true ) ) );
+	}
+
+	public function test_switching_reminders_on_after_todays_hour_skips_today() {
+		update_option( 'timezone_string', 'America/New_York' );
+		$user = self::factory()->user->create( array( 'role' => 'author' ) );
+		$on   = array(
+			'reminders' => array(
+				'enabled' => true,
+				'day'     => 'wed',
+				'hour'    => 9,
+			),
+		);
+		$off  = array( 'reminders' => array( 'enabled' => false ) );
+
+		// Wednesday 10:00, past the hour: today's reminder is treated as sent.
+		Settings::update( $user, $on, new DateTimeImmutable( '2026-05-13 10:00:00', wp_timezone() ) );
+		$this->assertSame( '2026-05-13', get_user_meta( $user, 'blog_rhythm_reminder_last', true ) );
+
+		// Before the hour, the first email can still go out today.
+		Settings::update( $user, $off );
+		delete_user_meta( $user, 'blog_rhythm_reminder_last' );
+		Settings::update( $user, $on, new DateTimeImmutable( '2026-05-20 08:00:00', wp_timezone() ) );
+		$this->assertSame( '', get_user_meta( $user, 'blog_rhythm_reminder_last', true ) );
+
+		// Already on: later saves don't touch it.
+		Settings::update( $user, $on, new DateTimeImmutable( '2026-05-20 10:00:00', wp_timezone() ) );
+		$this->assertSame( '', get_user_meta( $user, 'blog_rhythm_reminder_last', true ) );
+
+		// Not a reminder day: nothing recorded.
+		Settings::update( $user, $off );
+		Settings::update( $user, $on, new DateTimeImmutable( '2026-05-21 10:00:00', wp_timezone() ) );
+		$this->assertSame( '', get_user_meta( $user, 'blog_rhythm_reminder_last', true ) );
+	}
+
+	public function test_settle_rest_turns_off_a_finished_rest() {
+		update_option( 'timezone_string', 'America/New_York' );
+		$now      = new DateTimeImmutable( '2026-05-10 12:00:00', wp_timezone() );
+		$settings = array_merge(
+			Settings::defaults(),
+			array(
+				'resting'    => true,
+				'rest_until' => '2026-05-09',
+			)
+		);
+		$settled  = Settings::settle_rest( $settings, $now );
+		$this->assertFalse( $settled['resting'] );
+		$this->assertSame( '', $settled['rest_until'] );
+
+		$settings['rest_until'] = '2026-05-10';
+		$this->assertSame( $settings, Settings::settle_rest( $settings, $now ) );
+
+		$settings['rest_until'] = '';
+		$this->assertSame( $settings, Settings::settle_rest( $settings, $now ) );
+	}
 }

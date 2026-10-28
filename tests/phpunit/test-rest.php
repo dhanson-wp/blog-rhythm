@@ -177,6 +177,47 @@ class Test_Rest extends WP_UnitTestCase {
 		$this->assertSame( 1, $scans );
 	}
 
+	public function test_rhythm_reports_whether_settings_were_ever_saved() {
+		$this->assertFalse( $this->request( 'GET', '/rhythm' )->get_data()['configured'] );
+		$this->assertFalse( $this->request( 'POST', '/log' )->get_data()['configured'] );
+
+		// Saving the defaults unchanged still counts as setting up.
+		$this->request( 'POST', '/settings', Settings::defaults() );
+		$this->assertTrue( $this->request( 'GET', '/rhythm' )->get_data()['configured'] );
+		$this->assertTrue( $this->request( 'DELETE', '/log' )->get_data()['configured'] );
+		$this->assertTrue( $this->request( 'POST', '/history/clear' )->get_data()['configured'] );
+	}
+
+	public function test_finished_rest_reads_as_not_resting() {
+		update_user_meta(
+			$this->user_id,
+			Settings::META_KEY,
+			array_merge(
+				Settings::defaults(),
+				array(
+					'resting'    => true,
+					'rest_until' => '2020-01-01',
+				)
+			)
+		);
+		$data = $this->request( 'GET', '/settings' )->get_data();
+		$this->assertFalse( $data['resting'] );
+		$this->assertSame( '', $data['rest_until'] );
+		$this->assertFalse( $this->request( 'GET', '/rhythm' )->get_data()['settings']['resting'] );
+
+		$future = gmdate( 'Y-m-d', time() + 30 * DAY_IN_SECONDS );
+		$data   = $this->request(
+			'POST',
+			'/settings',
+			array(
+				'resting'    => true,
+				'rest_until' => $future,
+			)
+		)->get_data();
+		$this->assertTrue( $data['resting'] );
+		$this->assertSame( $future, $data['rest_until'] );
+	}
+
 	public function test_log_post_then_delete_roundtrip() {
 		$today = Log::today();
 
