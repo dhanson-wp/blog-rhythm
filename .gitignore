@@ -5,3 +5,6 @@ node_modules/
 reference/
 vendor/
 build/
+.phpunit.result.cache
+*.zip
+.wp-env.override.json

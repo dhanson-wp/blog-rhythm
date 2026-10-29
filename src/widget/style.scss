@@ -1,0 +1,86 @@
+// Dashboard widget chrome. Colors come from core --wpds-* tokens; the
+// second argument to var() is only a safety fallback.
+
+.blog-rhythm-settings-link {
+	float: inline-end;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.blog-rhythm-widget {
+	--blog-rhythm-muted: var(--wpds-color-foreground-content-neutral-weak, #636363);
+	--blog-rhythm-published: var(--wpds-color-background-interactive-brand-strong, #3858e9);
+
+	.blog-rhythm-intention {
+		margin: 0 0 10px;
+		font-size: 14px;
+	}
+
+	.blog-rhythm-note {
+		margin: 0 0 10px;
+		font-size: 12px;
+		color: var(--blog-rhythm-muted);
+	}
+
+	.blog-rhythm-save-status:not(:empty) {
+		margin: 0 0 10px;
+	}
+
+	.blog-rhythm-summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		margin: 12px 0 0;
+
+		p {
+			margin: 0;
+		}
+
+		.is-muted {
+			color: var(--blog-rhythm-muted);
+		}
+	}
+
+	.blog-rhythm-skeleton {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.blog-rhythm-empty {
+		padding: 18px 8px 6px;
+		text-align: center;
+
+		h3 {
+			margin: 0 0 4px;
+			font-size: 14px;
+		}
+
+		p {
+			margin: 0 0 12px;
+			color: var(--blog-rhythm-muted);
+		}
+	}
+
+	.blog-rhythm-empty-art {
+		display: inline-flex;
+		gap: 4px;
+		margin-bottom: 10px;
+
+		i {
+			width: 14px;
+			height: 14px;
+			border-radius: 4px;
+			background: color-mix(in srgb, var(--blog-rhythm-published) 18%, transparent);
+		}
+
+		i:nth-child(odd) {
+			background: color-mix(in srgb, var(--blog-rhythm-published) 55%, transparent);
+		}
+
+		i:last-child {
+			background: var(--blog-rhythm-published);
+		}
+	}
+}

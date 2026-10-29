@@ -1,0 +1,216 @@
+// Blog Rhythm visuals. Colors come from core --wpds-* tokens (the wp-theme
+// style handle); the second argument to var() is only a safety fallback.
+// No transitions or animations are used here, so prefers-reduced-motion needs
+// no special case. If one is ever added, wrap it in
+// @media (prefers-reduced-motion: no-preference).
+
+.blog-rhythm-viz {
+	--blog-rhythm-published: var(--wpds-color-background-interactive-brand-strong, #3858e9);
+	--blog-rhythm-ring: var(--wpds-color-stroke-surface-brand-strong, #3858e9);
+	--blog-rhythm-empty: var(--wpds-color-background-track-neutral-weak, #ececec);
+	--blog-rhythm-muted: var(--wpds-color-foreground-content-neutral-weak, #636363);
+	--blog-rhythm-ink: var(--wpds-color-foreground-content-neutral, #1e1e1e);
+	--blog-rhythm-hatch: var(--wpds-color-stroke-surface-neutral, #c3c4c7);
+
+	.blog-rhythm-month-labels {
+		position: relative;
+		height: 16px;
+		margin-bottom: 2px;
+		font-size: 11px;
+		color: var(--blog-rhythm-muted);
+
+		span {
+			position: absolute;
+		}
+	}
+
+	.blog-rhythm-grid,
+	.blog-rhythm-weeks,
+	.blog-rhythm-months,
+	.blog-rhythm-legend {
+		display: flex;
+	}
+
+	.blog-rhythm-grid {
+		gap: 3px;
+	}
+
+	.blog-rhythm-col {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	// Published: solid. Drafted: ring. Idea: small centered dot.
+	.blog-rhythm-cell {
+		box-sizing: border-box;
+		width: 10px;
+		height: 10px;
+		border-radius: 3px;
+		background: var(--blog-rhythm-empty);
+
+		&.is-published {
+			background: var(--blog-rhythm-published);
+		}
+
+		&.is-drafted {
+			background: transparent;
+			box-shadow: inset 0 0 0 2px var(--blog-rhythm-ring);
+		}
+
+		&.is-idea {
+			background: radial-gradient(circle, var(--blog-rhythm-ring) 0 1.5px, transparent 2px), var(--blog-rhythm-empty);
+		}
+
+		&.is-today {
+			outline: 2px solid var(--blog-rhythm-ink);
+			outline-offset: 1px;
+		}
+
+		&.is-resting {
+			background: repeating-linear-gradient(45deg, transparent 0 2px, var(--blog-rhythm-hatch) 2px 3px), var(--blog-rhythm-empty);
+		}
+
+		&.is-blank {
+			visibility: hidden;
+		}
+
+		&.is-round {
+			width: 14px;
+			height: 14px;
+			border-radius: 50%;
+		}
+	}
+
+	.blog-rhythm-weeks {
+		gap: 6px;
+		align-items: flex-end;
+	}
+
+	.blog-rhythm-week {
+		display: flex;
+		flex-direction: column-reverse;
+		align-items: center;
+		gap: 3px;
+
+		small {
+			min-height: 13px;
+			margin-top: 3px;
+			font-size: 10px;
+			line-height: 13px;
+			color: var(--blog-rhythm-muted);
+			white-space: nowrap;
+		}
+	}
+
+	.blog-rhythm-months {
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.blog-rhythm-month {
+		text-align: center;
+
+		small {
+			font-size: 10px;
+			color: var(--blog-rhythm-muted);
+		}
+	}
+
+	.blog-rhythm-block {
+		width: 26px;
+		height: 26px;
+		border-radius: 6px;
+		background: var(--blog-rhythm-empty);
+
+		&.is-light {
+			background: color-mix(in srgb, var(--blog-rhythm-published) 25%, var(--blog-rhythm-empty));
+		}
+
+		&.is-mid {
+			background: color-mix(in srgb, var(--blog-rhythm-published) 60%, var(--blog-rhythm-empty));
+		}
+
+		&.is-strong {
+			background: var(--blog-rhythm-published);
+		}
+	}
+
+	.blog-rhythm-legend {
+		gap: 12px;
+		margin-top: 8px;
+		align-items: center;
+		font-size: 11px;
+		color: var(--blog-rhythm-muted);
+
+		i {
+			display: inline-block;
+			margin-inline-end: 4px;
+			vertical-align: -1px;
+		}
+	}
+}
+
+// Windows High Contrast and other forced-colors modes drop backgrounds and
+// shadows, which would erase the solid / ring / dot shape cues. Redraw them
+// with borders, outlines, and system colors only.
+@media (forced-colors: active) {
+	.blog-rhythm-viz {
+		.blog-rhythm-cell,
+		.blog-rhythm-block {
+			forced-color-adjust: none;
+			border: 1px solid GrayText;
+			background: Canvas;
+			box-shadow: none;
+		}
+
+		// Published: solid.
+		.blog-rhythm-cell.is-published {
+			border-color: CanvasText;
+			background: CanvasText;
+		}
+
+		// Drafted: ring. The normal-mode inset shadow is more specific than
+		// the reset above, so clear it here or it paints the brand color.
+		.blog-rhythm-cell.is-drafted {
+			border: 2px solid CanvasText;
+			background: Canvas;
+			box-shadow: none;
+		}
+
+		// Idea: small centered dot.
+		.blog-rhythm-cell.is-idea {
+			border-color: CanvasText;
+			background: radial-gradient(circle, CanvasText 0 1.5px, Canvas 2px);
+		}
+
+		.blog-rhythm-cell.is-resting {
+			border-color: CanvasText;
+			background: repeating-linear-gradient(45deg, Canvas 0 2px, GrayText 2px 3px);
+		}
+
+		.blog-rhythm-cell.is-today {
+			outline: 2px solid Highlight;
+		}
+
+		.blog-rhythm-cell.is-blank {
+			border: 0;
+		}
+
+		// Month blocks: shade becomes border style, strongest is solid.
+		.blog-rhythm-block.is-light {
+			border: 2px dotted CanvasText;
+			background: Canvas;
+		}
+
+		.blog-rhythm-block.is-mid {
+			border: 2px dashed CanvasText;
+			background: Canvas;
+		}
+
+		.blog-rhythm-block.is-strong {
+			border-color: CanvasText;
+			background: CanvasText;
+		}
+	}
+}

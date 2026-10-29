@@ -1,0 +1,35 @@
+# Files left out of the production zip. Used by bin/package.sh (rsync
+# --exclude-from) and compatible with `wp dist-archive` and wp.org deploys.
+# build/ is gitignored but ships, so it is intentionally not listed here.
+.git
+.gitignore
+.github
+.superpowers
+.impeccable
+.claude
+.wp-env.json
+.wp-env.override.json
+.phpunit.result.cache
+.distignore
+.pressshipignore
+.DS_Store
+.gitkeep
+*.zip
+HANDOFF.md
+TODOS.md
+bin
+docs
+reference
+src
+tests
+node_modules
+vendor
+composer.json
+composer.lock
+package.json
+package-lock.json
+webpack.config.js
+jest.config.js
+eslint.config.cjs
+phpcs.xml.dist
+phpunit.xml.dist

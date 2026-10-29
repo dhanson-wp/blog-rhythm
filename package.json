@@ -1,0 +1,40 @@
+{
+	"name": "blog-rhythm",
+	"version": "1.0.0",
+	"description": "A private, per-writer dashboard widget that shows your own writing rhythm.",
+	"private": true,
+	"license": "GPL-2.0-or-later",
+	"engines": {
+		"node": ">=22.13"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"pretest:php": "[ -d vendor ] || composer install",
+		"test:php": "wp-env run tests-cli --env-cwd=wp-content/plugins/blog-rhythm vendor/bin/phpunit",
+		"test:js": "wp-scripts test-unit-jest",
+		"lint:js": "wp-scripts lint-js",
+		"lint:php": "composer lint",
+		"package": "npm run build && bash bin/package.sh"
+	},
+	"devDependencies": {
+		"@testing-library/dom": "10.4.2",
+		"@testing-library/react": "16.3.3",
+		"@wordpress/env": "12.0.0",
+		"@wordpress/scripts": "37.0.0",
+		"axe-core": "4.14.0",
+		"globals": "16.5.0",
+		"jest": "30.5.2",
+		"jest-axe": "11.0.0",
+		"jest-environment-jsdom": "30.5.2"
+	},
+	"dependencies": {
+		"@wordpress/a11y": "5.0.0",
+		"@wordpress/admin-ui": "3.0.0",
+		"@wordpress/api-fetch": "8.0.0",
+		"@wordpress/date": "6.0.0",
+		"@wordpress/element": "10.0.0",
+		"@wordpress/i18n": "7.0.0",
+		"@wordpress/ui": "0.25.0"
+	}
+}

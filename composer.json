@@ -1,0 +1,24 @@
+{
+	"name": "derekhanson/blog-rhythm",
+	"description": "A private, per-writer dashboard widget that shows your own writing rhythm.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": { "php": ">=7.4" },
+	"require-dev": {
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpunit/phpunit": "^9.6",
+		"wp-coding-standards/wpcs": "^3.1",
+		"yoast/phpunit-polyfills": "^2.0"
+	},
+	"config": {
+		"sort-packages": true,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"lint:fix": "phpcbf"
+	}
+}

@@ -1,0 +1,548 @@
+# Copyright (C) 2026 Derek Hanson
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blog Rhythm 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blog-rhythm\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-28T02:33:28+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: blog-rhythm\n"
+
+#. Plugin Name of the plugin
+#: blog-rhythm.php
+#: includes/Dashboard_Widget.php:42
+#: includes/Privacy.php:48
+#: includes/Privacy.php:62
+#: includes/Privacy.php:104
+#: includes/Settings_Page.php:54
+#: includes/Settings_Page.php:55
+#: src/settings/Preview.js:25
+#: src/settings/SettingsApp.js:305
+msgid "Blog Rhythm"
+msgstr ""
+
+#. Description of the plugin
+#: blog-rhythm.php
+msgid "A private, per-writer dashboard widget that shows your own writing rhythm."
+msgstr ""
+
+#. Author of the plugin
+#: blog-rhythm.php
+msgid "Derek Hanson"
+msgstr ""
+
+#: includes/Dashboard_Widget.php:45
+msgid "Settings"
+msgstr ""
+
+#: includes/Privacy.php:129
+msgid "History cleared before"
+msgstr ""
+
+#. translators: %s: date, Y-m-d.
+#: includes/Privacy.php:148
+#, php-format
+msgid "Activity on %s"
+msgstr ""
+
+#: includes/Reminders.php:120
+msgid "A note from Blog Rhythm"
+msgstr ""
+
+#: includes/Reminders.php:214
+msgid "Reminders are off. You can turn them back on any time from Blog Rhythm in your dashboard."
+msgstr ""
+
+#: includes/Reminders.php:215
+msgid "Reminders are off"
+msgstr ""
+
+#: includes/Reminders.php:221
+msgid "This link doesn't work anymore. You can change reminders from Blog Rhythm in your dashboard."
+msgstr ""
+
+#: includes/Reminders.php:222
+msgid "Link not valid"
+msgstr ""
+
+#: includes/Reminders.php:250
+msgid "Turn off these reminders:"
+msgstr ""
+
+#: includes/Rest.php:177
+msgid "Settings must be sent as an object."
+msgstr ""
+
+#: includes/Settings.php:50
+msgid "Write a little, most days."
+msgstr ""
+
+#: includes/Settings.php:60
+msgid "Your rhythm is here whenever you are. Want to write a little?"
+msgstr ""
+
+#: src/settings/cards/InYourWords.js:8
+msgid "In your own words"
+msgstr ""
+
+#: src/settings/cards/InYourWords.js:10
+msgid "What are you doing this for?"
+msgstr ""
+
+#: src/settings/cards/InYourWords.js:11
+msgid "Shown at the top of your dashboard widget. Leave it empty to hide it."
+msgstr ""
+
+#: src/settings/cards/Pace.js:13
+msgid "Your pace"
+msgstr ""
+
+#: src/settings/cards/Pace.js:14
+msgid "How often would you like to show up? Change it any time; nothing is lost."
+msgstr ""
+
+#: src/settings/cards/Pace.js:21
+msgid "Cadence"
+msgstr ""
+
+#: src/settings/cards/Pace.js:28
+msgid "Most days"
+msgstr ""
+
+#: src/settings/cards/Pace.js:29
+msgid "A small daily habit."
+msgstr ""
+
+#: src/settings/cards/Pace.js:36
+msgid "Every week"
+msgstr ""
+
+#: src/settings/cards/Pace.js:37
+msgid "A few times, spread how you like."
+msgstr ""
+
+#: src/settings/cards/Pace.js:44
+msgid "Every month"
+msgstr ""
+
+#: src/settings/cards/Pace.js:45
+msgid "A slower, steadier rhythm."
+msgstr ""
+
+#: src/settings/cards/Pace.js:52
+msgid "No target, just show me"
+msgstr ""
+
+#: src/settings/cards/Pace.js:56
+msgid "See what happens without a goal."
+msgstr ""
+
+#: src/settings/cards/Pace.js:69
+msgid "Times I'd like to show up"
+msgstr ""
+
+#: src/settings/cards/Pace.js:90
+msgid "a month"
+msgstr ""
+
+#: src/settings/cards/Pace.js:91
+msgid "a week"
+msgstr ""
+
+#: src/settings/cards/Pace.js:103
+msgid "A gentle aim, not a requirement. Missing it never shows up as a miss."
+msgstr ""
+
+#: src/settings/cards/Privacy.js:7
+msgid "Privacy and your data"
+msgstr ""
+
+#: src/settings/cards/Privacy.js:10
+msgid "Your rhythm is private to your account. It's never counted in traffic, stats, or anything other people see. There's no admin screen for it, either."
+msgstr ""
+
+#: src/settings/cards/Privacy.js:21
+msgid "Export my data"
+msgstr ""
+
+#: src/settings/cards/Privacy.js:32
+#: src/settings/cards/Privacy.js:41
+msgid "Clear my history"
+msgstr ""
+
+#: src/settings/cards/Privacy.js:36
+msgid "Clear your history?"
+msgstr ""
+
+#: src/settings/cards/Privacy.js:37
+msgid "Your rhythm starts fresh from today. Earlier post activity is hidden, not deleted, and your posts stay just as they are. Ideas and outlines you logged are removed."
+msgstr ""
+
+#: src/settings/cards/Privacy.js:45
+msgid "Cancel"
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:13
+msgid "Quiet stretches"
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:14
+msgid "Life happens. Resting is part of a rhythm."
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:21
+msgid "Rest for a while"
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:22
+msgid "Hides targets and nudges until you're back. Past days stay as they were."
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:33
+msgid "Until"
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:34
+msgid "Optional. Leave blank to come back whenever."
+msgstr ""
+
+#: src/settings/cards/QuietStretches.js:49
+msgid "A quiet stretch is never counted against you. Rest as long as you need."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:17
+msgid "Every day"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:18
+msgid "Weekdays"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:19
+msgid "Mondays"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:20
+msgid "Wednesdays"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:21
+msgid "Fridays"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:22
+msgid "Sundays"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:50
+msgid "Reminders"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:51
+msgid "Off unless you want one. A nudge you chose, in your words, never a scolding."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:58
+msgid "Remind me to write"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:59
+msgid "Sent only to you."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:69
+msgid "When"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:78
+msgid "Day"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:84
+msgid "at"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:86
+msgid "Time"
+msgstr ""
+
+#. translators: %s: site time zone, such as America/New_York or UTC+02:00
+#: src/settings/cards/Reminders.js:100
+#, js-format
+msgid "In your site's time zone (%s). Delivery times are approximate."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:110
+msgid "How"
+msgstr ""
+
+#. translators: %s: the writer's email address
+#: src/settings/cards/Reminders.js:118
+#, js-format
+msgid "Email me at %s"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:124
+msgid "Email me"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:126
+msgid "Your site needs to be able to send email."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:136
+msgid "Show a quiet note on my dashboard"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:148
+msgid "Skip it if I've already shown up"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:152
+msgid "So it never nags after you've done the thing."
+msgstr ""
+
+#: src/settings/cards/Reminders.js:162
+msgid "What it says"
+msgstr ""
+
+#: src/settings/cards/Reminders.js:163
+msgid "Resting pauses reminders automatically. Every email has a one-click way to turn them off."
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:7
+msgid "Publishing a post"
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:10
+msgid "Working on a draft"
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:11
+msgid "Saving or editing an unpublished post."
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:18
+msgid "Ideas and outlines"
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:19
+msgid "Quick notes you log yourself. WordPress can't see these on its own."
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:24
+msgid "Updating an older post"
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:29
+msgid "What counts as showing up"
+msgstr ""
+
+#: src/settings/cards/WhatCounts.js:30
+msgid "Pick everything that feels like real writing time to you."
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:12
+msgid "Your dashboard widget"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:15
+msgid "Show"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:19
+msgid "Match my pace (recommended)"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:26
+msgid "Calendar of dots"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:30
+msgid "Week by week"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:37
+msgid "Show the one-line summary"
+msgstr ""
+
+#: src/settings/cards/WidgetLook.js:44
+msgid "Show \"I showed up today\""
+msgstr ""
+
+#. translators: %d: highest allowed number, 7 or 31
+#: src/settings/form.js:42
+#, js-format
+msgid "Choose a number from 1 to %d."
+msgstr ""
+
+#: src/settings/Preview.js:20
+msgid "Live preview of your dashboard widget"
+msgstr ""
+
+#: src/settings/SettingsApp.js:135
+msgid "Settings saved."
+msgstr ""
+
+#: src/settings/SettingsApp.js:143
+msgid "Your changes couldn't be saved. Try again in a moment."
+msgstr ""
+
+#: src/settings/SettingsApp.js:166
+msgid "Your data couldn't be exported. Try again in a moment."
+msgstr ""
+
+#: src/settings/SettingsApp.js:183
+msgid "Your history couldn't be cleared. Try again in a moment."
+msgstr ""
+
+#: src/settings/SettingsApp.js:193
+msgid "Your history is cleared."
+msgstr ""
+
+#: src/settings/SettingsApp.js:199
+msgid "Save changes"
+msgstr ""
+
+#: src/settings/SettingsApp.js:208
+msgid "Blog Rhythm couldn't load your settings. Try again in a moment."
+msgstr ""
+
+#: src/settings/SettingsApp.js:290
+msgid "Changes show in the preview as you make them."
+msgstr ""
+
+#: src/settings/SettingsApp.js:308
+msgid "Only you can see this"
+msgstr ""
+
+#: src/settings/SettingsApp.js:311
+msgid "Set the pace that suits you. Drafting and outlining count as showing up."
+msgstr ""
+
+#: src/shared/layout.js:153
+msgid "Now"
+msgstr ""
+
+#. translators: %s: date such as Nov 15
+#: src/shared/layout.js:235
+#, js-format
+msgid "Resting until %s."
+msgstr ""
+
+#: src/shared/layout.js:238
+#: src/shared/layout.js:242
+msgid "Welcome back whenever."
+msgstr ""
+
+#: src/shared/layout.js:241
+msgid "Resting for a while."
+msgstr ""
+
+#: src/shared/layout.js:253
+msgid "A quiet month so far."
+msgstr ""
+
+#: src/shared/layout.js:254
+msgid "A quiet week so far."
+msgstr ""
+
+#: src/shared/layout.js:255
+msgid "That's part of it."
+msgstr ""
+
+#. translators: %d: number of times
+#: src/shared/layout.js:262
+#, js-format
+msgid "%d time this month."
+msgid_plural "%d times this month."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of days
+#: src/shared/layout.js:267
+#, js-format
+msgid "%d day this week."
+msgid_plural "%d days this week."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: target per month
+#: src/shared/layout.js:280
+#, js-format
+msgid "Your pace: %d a month."
+msgstr ""
+
+#. translators: %d: target per week
+#: src/shared/layout.js:285
+#, js-format
+msgid "Your pace: %d a week."
+msgstr ""
+
+#: src/shared/layout.js:312
+msgid "published"
+msgstr ""
+
+#: src/shared/layout.js:314
+msgid "drafted"
+msgstr ""
+
+#: src/shared/layout.js:316
+msgid "idea or outline"
+msgstr ""
+
+#. translators: 1: date such as Oct 27, 2: activity such as published
+#: src/shared/layout.js:335
+#, js-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: src/shared/Visualization.js:103
+msgid "A time you showed up"
+msgstr ""
+
+#: src/shared/Visualization.js:116
+msgid "Published"
+msgstr ""
+
+#: src/shared/Visualization.js:117
+msgid "Drafted"
+msgstr ""
+
+#: src/shared/Visualization.js:118
+msgid "Idea or outline"
+msgstr ""
+
+#: src/shared/Visualization.js:152
+msgid "Days you showed up"
+msgstr ""
+
+#: src/widget/WidgetView.js:29
+msgid "Set a pace that suits you"
+msgstr ""
+
+#: src/widget/WidgetView.js:31
+msgid "Choose how often you'd like to write, and what counts. No pressure, nothing public."
+msgstr ""
+
+#: src/widget/WidgetView.js:37
+msgid "Choose your pace"
+msgstr ""
+
+#: src/widget/WidgetView.js:79
+msgid "Blog Rhythm couldn't load right now. Try again in a moment."
+msgstr ""
+
+#: src/widget/WidgetView.js:151
+msgid "Undo"
+msgstr ""
+
+#: src/widget/WidgetView.js:152
+msgid "I showed up today"
+msgstr ""
